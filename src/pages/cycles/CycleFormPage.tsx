@@ -77,7 +77,7 @@ export function CycleFormPage() {
             environment: cycle.environment,
             startDate: cycle.startDate,
             endDate: cycle.endDate,
-            owner: cycle.owner,
+            owner: user?.displayName ?? cycle.owner,
             status: cycle.status,
           });
         } else if (projectId) {
@@ -92,7 +92,7 @@ export function CycleFormPage() {
             ...current,
             version: project.version,
             environment: project.environment,
-            owner: project.owner || current.owner,
+            owner: user?.displayName ?? current.owner,
           }));
         }
       } catch (error) {
@@ -103,20 +103,21 @@ export function CycleFormPage() {
     }
 
     void load();
-  }, [cycleId, projectId, navigate, reset, showToast]);
+  }, [cycleId, projectId, navigate, reset, showToast, user]);
 
   async function onSubmit(values: FormValues) {
     if (!user || !resolvedProjectId) {
       return;
     }
     try {
+      const payload = { ...values, owner: user.displayName };
       if (cycleId) {
-        await updateCycle(cycleId, values);
+        await updateCycle(cycleId, payload);
         showToast('Ciclo atualizado.');
         navigate(`/cycles/${cycleId}`);
         return;
       }
-      const id = await createCycle(user.id, resolvedProjectId, values);
+      const id = await createCycle(user.id, resolvedProjectId, payload);
       showToast('Ciclo criado.');
       navigate(`/cycles/${id}`);
     } catch (error) {
@@ -143,7 +144,7 @@ export function CycleFormPage() {
             <Input label="Ambiente" {...register('environment')} />
             <Input label="Data inicial" type="date" {...register('startDate')} />
             <Input label="Data final" type="date" {...register('endDate')} />
-            <Input label="Responsável" {...register('owner')} />
+            <Input label="Responsável pelo QA" readOnly className="bg-paper text-muted" {...register('owner')} />
             <Select
               label="Status"
               options={CYCLE_STATUSES.map((status) => ({

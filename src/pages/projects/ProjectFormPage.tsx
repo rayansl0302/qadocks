@@ -76,7 +76,7 @@ export function ProjectFormPage() {
           client: project.client,
           version: project.version,
           environment: project.environment,
-          owner: project.owner,
+          owner: user?.displayName ?? project.owner,
           status: project.status,
         });
       } catch (error) {
@@ -87,20 +87,21 @@ export function ProjectFormPage() {
     }
 
     void load();
-  }, [projectId, navigate, reset, showToast]);
+  }, [projectId, navigate, reset, showToast, user]);
 
   async function onSubmit(values: FormValues) {
     if (!user) {
       return;
     }
     try {
+      const payload = { ...values, owner: user.displayName };
       if (projectId) {
-        await updateProject(projectId, values);
+        await updateProject(projectId, payload);
         showToast('Projeto atualizado.');
         navigate(`/projects/${projectId}`);
         return;
       }
-      const id = await createProject(user.id, values);
+      const id = await createProject(user.id, payload);
       showToast('Projeto criado.');
       navigate(`/projects/${id}`);
     } catch (error) {
@@ -126,7 +127,7 @@ export function ProjectFormPage() {
             <Input label="Cliente" {...register('client')} />
             <Input label="Versão" {...register('version')} />
             <Input label="Ambiente principal" {...register('environment')} />
-            <Input label="Responsável" {...register('owner')} />
+            <Input label="Responsável pelo QA" readOnly className="bg-paper text-muted" {...register('owner')} />
           </div>
           <Select
             label="Status"

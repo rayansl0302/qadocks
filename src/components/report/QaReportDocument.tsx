@@ -174,7 +174,7 @@ export function QaReportDocument({
     .slice(0, 6);
 
   return (
-    <Document title={config.title} author={cycle.owner || project.owner}>
+    <Document title={config.title} author={qaOwner}>
       {showCover ? (
         <Page size="A4" style={styles.page}>
           <Header project={project.name} cycle={cycle.name} />
@@ -189,7 +189,7 @@ export function QaReportDocument({
               <Text style={styles.muted}>
                 Período: {formatDate(cycle.startDate)} — {formatDate(cycle.endDate)}
               </Text>
-              <Text style={styles.muted}>Responsável: {cycle.owner || project.owner || '—'}</Text>
+              <Text style={styles.muted}>Responsável: {qaOwner || '—'}</Text>
             </View>
             <Text style={styles.muted}>Emitido em {formatDate(generatedAt)}</Text>
           </View>
@@ -343,7 +343,7 @@ export function QaReportDocument({
           {showFull ? (
             <View style={{ marginTop: 28 }}>
               <Text style={styles.heading}>7. Aprovação</Text>
-              <Text style={styles.muted}>Responsável pelo QA: {cycle.owner || project.owner || '—'}</Text>
+              <Text style={styles.muted}>Responsável pelo QA: {qaOwner || '—'}</Text>
               <Text style={styles.muted}>Data: {formatDate(generatedAt)}</Text>
               <Text style={styles.muted}>Observações: {cycle.description || '—'}</Text>
             </View>

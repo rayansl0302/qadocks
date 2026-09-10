@@ -133,6 +133,7 @@ export function ReportGeneratePage() {
           config={config}
           stats={stats}
           generatedAt={generatedAt}
+          qaOwner={user.displayName}
         />,
       ).toBlob();
       const name = buildReportFileName(project.name, cycle.name, generatedAt);
@@ -205,7 +206,10 @@ export function ReportGeneratePage() {
         description={cycle.name}
         actions={
           <Link to={`/cycles/${cycle.id}`}>
-            <Button variant="secondary">Voltar ao ciclo</Button>
+            <Button className="border border-teal bg-paper text-teal hover:bg-teal hover:text-paper">
+              <ArrowLeft size={16} />
+              Voltar ao ciclo
+            </Button>
           </Link>
         }
       />
