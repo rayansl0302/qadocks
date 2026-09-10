@@ -7,6 +7,7 @@ import type {
   ProjectStatus,
   ReportTemplate,
   Severity,
+  TestScenarioType,
 } from '@/types';
 
 export const ISSUE_TYPE_LABEL: Record<IssueType, string> = {
@@ -140,5 +141,17 @@ export const BROWSERS = ['Chrome', 'Edge', 'Firefox', 'Safari', 'Opera'];
 export const OPERATING_SYSTEMS = ['Windows 10/11', 'Windows', 'macOS', 'Linux', 'Android', 'iOS'];
 
 export const DEVICES = ['Desktop', 'Notebook', 'Tablet', 'Celular'];
+
+export const SCENARIO_TYPE_LABEL: Record<TestScenarioType, string> = {
+  happy_path: 'Caminho feliz',
+  negative: 'Teste negativo',
+};
+
+export const SCENARIO_SECTION_LABEL: Record<TestScenarioType, string> = {
+  happy_path: 'Happy Path — quando o fluxo acontece da forma correta',
+  negative: 'Testes negativos — quando o fluxo não acontece da forma correta',
+};
+
+export const SCENARIO_TYPES: TestScenarioType[] = ['happy_path', 'negative'];
 
 export const LARGE_IMAGE_BYTES = 5 * 1024 * 1024;

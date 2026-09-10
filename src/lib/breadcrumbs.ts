@@ -38,11 +38,27 @@ export function buildBreadcrumbs(input: BreadcrumbInput): BreadcrumbItem[] {
   if (matchPath({ path: '/dashboard', end: true }, input.pathname)) {
     return [{ label: 'Dashboard' }];
   }
+  const casos: BreadcrumbItem = { label: 'Casos de teste', to: '/casos' };
+  if (matchPath({ path: '/casos', end: true }, input.pathname)) {
+    return [home, { label: 'Casos de teste' }];
+  }
   if (matchPath({ path: '/projects/new', end: true }, input.pathname)) {
     return [home, projects, { label: 'Novo projeto' }];
   }
   if (matchPath({ path: '/projects/:projectId/edit', end: true }, input.pathname)) {
     return [home, projects, project, { label: 'Editar' }];
+  }
+  if (matchPath({ path: '/projects/:projectId/casos/new', end: true }, input.pathname)) {
+    return [home, casos, { label: 'Novo caso' }];
+  }
+  if (matchPath({ path: '/projects/:projectId/casos/:caseId/edit', end: true }, input.pathname)) {
+    return [home, casos, { label: 'Editar' }];
+  }
+  if (matchPath({ path: '/projects/:projectId/casos/:caseId', end: true }, input.pathname)) {
+    return [home, casos, { label: 'Caso' }];
+  }
+  if (matchPath({ path: '/projects/:projectId/casos', end: true }, input.pathname)) {
+    return [home, casos];
   }
   if (matchPath({ path: '/projects/:projectId/cycles/new', end: true }, input.pathname)) {
     return [home, projects, project, cycles, { label: 'Novo ciclo' }];

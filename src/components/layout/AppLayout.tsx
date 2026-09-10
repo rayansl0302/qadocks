@@ -1,5 +1,5 @@
-import { BookOpen, FileText, FolderKanban, LayoutDashboard, LogOut, UserRound } from 'lucide-react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { BookOpen, ClipboardList, FileText, FolderKanban, LayoutDashboard, LogOut, UserRound } from 'lucide-react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AppBreadcrumbs } from '@/components/layout/AppBreadcrumbs';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,6 +10,7 @@ import { logoutUser } from '@/services/authService';
 const links = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/projects', label: 'Projetos', icon: FolderKanban },
+  { to: '/casos', label: 'Casos de teste', icon: ClipboardList },
   { to: '/reports', label: 'Relatórios', icon: FileText },
   { to: '/base-conhecimento', label: 'Base de conhecimento', icon: BookOpen },
   { to: '/perfil', label: 'Perfil', icon: UserRound },
@@ -19,6 +20,8 @@ export function AppLayout() {
   const { user } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const onCasos = pathname.startsWith('/casos') || /\/casos(\/|$)/.test(pathname);
 
   async function handleLogout() {
     try {
@@ -43,11 +46,17 @@ export function AppLayout() {
               <NavLink
                 key={link.to}
                 to={link.to}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium ${
-                    isActive ? 'bg-paper text-teal' : 'text-paper/80 hover:bg-teal-soft hover:text-paper'
-                  }`
-                }
+                className={({ isActive }) => {
+                  const active =
+                    link.to === '/casos'
+                      ? onCasos
+                      : link.to === '/projects'
+                        ? pathname.startsWith('/projects') && !onCasos
+                        : isActive;
+                  return `flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium ${
+                    active ? 'bg-paper text-teal' : 'text-paper/80 hover:bg-teal-soft hover:text-paper'
+                  }`;
+                }}
               >
                 <Icon size={18} />
                 {link.label}

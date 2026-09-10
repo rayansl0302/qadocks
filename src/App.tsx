@@ -21,6 +21,10 @@ import { KnowledgeBasePage } from '@/pages/KnowledgeBasePage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { ReportsPage } from '@/pages/reports/ReportsPage';
 import { ManualPreviewPage } from '@/pages/manual/ManualPreviewPage';
+import { TestCaseDetailPage } from '@/pages/testCases/TestCaseDetailPage';
+import { TestCaseFormPage } from '@/pages/testCases/TestCaseFormPage';
+import { TestCaseListPage } from '@/pages/testCases/TestCaseListPage';
+import { TestCasesHubPage } from '@/pages/testCases/TestCasesHubPage';
 
 export function App() {
   return (
@@ -36,10 +40,15 @@ export function App() {
         </Route>
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/casos" element={<TestCasesHubPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/projects/new" element={<ProjectFormPage />} />
           <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
           <Route path="/projects/:projectId/edit" element={<ProjectFormPage />} />
+          <Route path="/projects/:projectId/casos" element={<TestCaseListPage />} />
+          <Route path="/projects/:projectId/casos/new" element={<TestCaseFormPage />} />
+          <Route path="/projects/:projectId/casos/:caseId" element={<TestCaseDetailPage />} />
+          <Route path="/projects/:projectId/casos/:caseId/edit" element={<TestCaseFormPage />} />
           <Route path="/projects/:projectId/cycles" element={<ProjectCyclesPage />} />
           <Route path="/projects/:projectId/cycles/new" element={<CycleFormPage />} />
           <Route path="/cycles/:cycleId" element={<CycleDetailPage />} />

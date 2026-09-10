@@ -13,6 +13,7 @@ import {
 import { asString, toDate } from '@/lib/firestore';
 import { getFirebaseDb } from '@/services/firebase';
 import { deleteCycleById, listCycles } from '@/services/cycleService';
+import { deleteTestCasesByProject } from '@/services/testCaseService';
 import type { Project, ProjectStatus } from '@/types';
 
 export interface ProjectInput {
@@ -73,5 +74,6 @@ export async function updateProject(projectId: string, input: ProjectInput): Pro
 export async function deleteProject(projectId: string): Promise<void> {
   const cycles = await listCycles(projectId);
   await Promise.all(cycles.map((cycle) => deleteCycleById(cycle.id)));
+  await deleteTestCasesByProject(projectId);
   await deleteDoc(doc(getFirebaseDb(), 'projects', projectId));
 }

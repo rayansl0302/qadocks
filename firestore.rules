@@ -37,5 +37,10 @@ service cloud.firestore {
       allow read, delete: if isSignedIn() && resource.data.createdBy == request.auth.uid;
       allow create: if isSignedIn() && request.resource.data.createdBy == request.auth.uid;
     }
+
+    match /testCases/{caseId} {
+      allow read, update, delete: if isSignedIn() && resource.data.createdBy == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.createdBy == request.auth.uid;
+    }
   }
 }

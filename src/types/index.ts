@@ -157,3 +157,31 @@ export interface ReportWarning {
   id: string;
   message: string;
 }
+
+export type TestScenarioType = 'happy_path' | 'negative';
+
+export interface TestStep {
+  action: string;
+  data: string;
+  expected: string;
+  result: string;
+  comment: string;
+}
+
+export interface TestScenario {
+  type: TestScenarioType;
+  title: string;
+  expected: string;
+  steps: TestStep[];
+}
+
+export interface TestCase {
+  id: string;
+  projectId: string;
+  name: string;
+  description: string;
+  setupSteps: TestStep[];
+  scenarios: TestScenario[];
+  createdAt: Date;
+  createdBy: string;
+}

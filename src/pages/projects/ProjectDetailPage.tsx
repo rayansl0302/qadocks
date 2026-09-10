@@ -154,7 +154,7 @@ export function ProjectDetailPage() {
       {confirmProject ? (
         <ConfirmDialog
           title="Excluir projeto"
-          description="Essa ação remove o projeto, os ciclos, as ocorrências e as evidências."
+          description="Essa ação remove o projeto, os ciclos, as ocorrências, as evidências e os casos de teste."
           confirmLabel="Excluir projeto"
           danger
           onCancel={() => setConfirmProject(false)}
