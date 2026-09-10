@@ -15,22 +15,18 @@ export function detectEnvironment(): DetectedEnvironment {
 
 function detectBrowser(userAgent: string): string {
   if (userAgent.includes('Edg/')) {
-    const version = userAgent.match(/Edg\/([\d.]+)/)?.[1] ?? '';
-    return `Edge ${version}`.trim();
+    return 'Edge';
   }
   if (userAgent.includes('Chrome/')) {
-    const version = userAgent.match(/Chrome\/([\d.]+)/)?.[1] ?? '';
-    return `Chrome ${version}`.trim();
+    return 'Chrome';
   }
   if (userAgent.includes('Firefox/')) {
-    const version = userAgent.match(/Firefox\/([\d.]+)/)?.[1] ?? '';
-    return `Firefox ${version}`.trim();
+    return 'Firefox';
   }
   if (userAgent.includes('Safari/') && !userAgent.includes('Chrome/')) {
-    const version = userAgent.match(/Version\/([\d.]+)/)?.[1] ?? '';
-    return `Safari ${version}`.trim();
+    return 'Safari';
   }
-  return 'Não identificado';
+  return '';
 }
 
 function detectOperatingSystem(userAgent: string): string {
@@ -60,7 +56,7 @@ function detectDevice(userAgent: string): string {
     return 'Tablet';
   }
   if (userAgent.includes('Mobi')) {
-    return 'Mobile';
+    return 'Celular';
   }
   return 'Desktop';
 }

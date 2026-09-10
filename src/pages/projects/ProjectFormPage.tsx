@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -8,11 +8,13 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
+import { SelectWithOther } from '@/components/ui/SelectWithOther';
+import { VersionField } from '@/components/ui/VersionField';
 import { Spinner } from '@/components/ui/Spinner';
 import { Textarea } from '@/components/ui/Textarea';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
-import { PROJECT_STATUS_LABEL, PROJECT_STATUSES } from '@/lib/constants';
+import { ENVIRONMENTS, PROJECT_STATUS_LABEL, PROJECT_STATUSES } from '@/lib/constants';
 import { getErrorMessage } from '@/lib/errors';
 import { createProject, getProject, updateProject } from '@/services/projectService';
 import type { ProjectStatus } from '@/types';
@@ -39,6 +41,7 @@ export function ProjectFormPage() {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
@@ -137,15 +140,30 @@ export function ProjectFormPage() {
             hint="É para quem o sistema pertence ou será entregue. Serve para identificar o destinatário do projeto."
             {...register('client')}
           />
-          <Input
-            label="Versão"
-            hint="É a versão atual do sistema neste projeto. Serve como referência padrão para os ciclos."
-            {...register('version')}
+          <Controller
+            name="version"
+            control={control}
+            render={({ field }) => (
+              <VersionField
+                label="Versão"
+                hint="É a versão atual do sistema. Use Patch, Minor ou Major para subir a versão sem digitar."
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
-          <Input
-            label="Ambiente principal"
-            hint="É o ambiente padrão dos testes, como homologação. Serve de base quando um ciclo não informar outro."
-            {...register('environment')}
+          <Controller
+            name="environment"
+            control={control}
+            render={({ field }) => (
+              <SelectWithOther
+                label="Ambiente principal"
+                hint="É o ambiente padrão dos testes. Escolha uma opção ou use Outro se for um ambiente diferente."
+                options={ENVIRONMENTS}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
           <Input
             label="Responsável pelo QA"

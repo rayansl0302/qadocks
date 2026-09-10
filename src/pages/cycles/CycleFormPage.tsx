@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -8,11 +8,13 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
+import { SelectWithOther } from '@/components/ui/SelectWithOther';
+import { VersionField } from '@/components/ui/VersionField';
 import { Spinner } from '@/components/ui/Spinner';
 import { Textarea } from '@/components/ui/Textarea';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
-import { CYCLE_STATUS_LABEL, CYCLE_STATUSES } from '@/lib/constants';
+import { CYCLE_NAMES, CYCLE_STATUS_LABEL, CYCLE_STATUSES, ENVIRONMENTS } from '@/lib/constants';
 import { getErrorMessage } from '@/lib/errors';
 import { createCycle, getCycle, updateCycle } from '@/services/cycleService';
 import { getProject } from '@/services/projectService';
@@ -42,6 +44,7 @@ export function CycleFormPage() {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
@@ -137,26 +140,49 @@ export function CycleFormPage() {
       />
       <Card className="max-w-5xl">
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <Input
-            label="Nome"
-            error={errors.name?.message}
-            hint="É o nome desta rodada de testes. Serve para identificar o ciclo na lista do projeto e no PDF."
-            {...register('name')}
+          <Controller
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <SelectWithOther
+                label="Nome"
+                error={errors.name?.message}
+                hint="É o nome desta rodada de testes. Escolha um tipo comum ou use Outro para escrever um nome próprio."
+                options={CYCLE_NAMES}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
           <Textarea
             label="Descrição"
             hint="Explica o objetivo desta rodada. Serve para contextualizar o que será testado neste ciclo."
             {...register('description')}
           />
-          <Input
-            label="Versão"
-            hint="É a versão do sistema nesta rodada. Serve para saber em qual build o teste foi feito."
-            {...register('version')}
+          <Controller
+            name="version"
+            control={control}
+            render={({ field }) => (
+              <VersionField
+                label="Versão"
+                hint="Vem da versão do projeto. Use Patch, Minor ou Major para subir a versão desta rodada."
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
-          <Input
-            label="Ambiente"
-            hint="É o ambiente onde o teste acontece, como homologação ou produção. Serve para registrar onde o ciclo foi executado."
-            {...register('environment')}
+          <Controller
+            name="environment"
+            control={control}
+            render={({ field }) => (
+              <SelectWithOther
+                label="Ambiente"
+                hint="É o ambiente onde o teste acontece. Escolha uma opção ou use Outro se for um ambiente diferente."
+                options={ENVIRONMENTS}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
           <Input
             label="Data inicial"

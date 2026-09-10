@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { EvidenceUploader, type PendingEvidence } from '@/components/evidence/EvidenceUploader';
@@ -9,15 +9,21 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
+import { SelectWithOther } from '@/components/ui/SelectWithOther';
+import { VersionField } from '@/components/ui/VersionField';
 import { Spinner } from '@/components/ui/Spinner';
 import { Textarea } from '@/components/ui/Textarea';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
 import {
+  BROWSERS,
+  DEVICES,
+  ENVIRONMENTS,
   ISSUE_STATUS_LABEL,
   ISSUE_STATUSES,
   ISSUE_TYPE_LABEL,
   ISSUE_TYPES,
+  OPERATING_SYSTEMS,
   PRIORITIES,
   PRIORITY_LABEL,
   SEVERITIES,
@@ -377,30 +383,69 @@ export function IssueFormPage() {
           <>
             <Card className="grid gap-4">
               <h2 className="font-display text-2xl">Ambiente</h2>
-              <Input
-                label="Ambiente"
-                hint="É o ambiente em que o bug apareceu, como homologação. Serve para reproduzir o erro no mesmo lugar."
-                {...register('environment')}
+              <Controller
+                name="environment"
+                control={control}
+                render={({ field }) => (
+                  <SelectWithOther
+                    label="Ambiente"
+                    hint="É o ambiente em que o bug apareceu. Escolha uma opção ou use Outro se for um ambiente diferente."
+                    options={ENVIRONMENTS}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
               />
-              <Input
-                label="Versão"
-                hint="É a versão do sistema no momento do teste. Serve para saber em qual build o bug ocorreu."
-                {...register('version')}
+              <Controller
+                name="version"
+                control={control}
+                render={({ field }) => (
+                  <VersionField
+                    label="Versão"
+                    hint="Vem da versão do ciclo. Use Patch, Minor ou Major se o teste foi em uma build mais nova."
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
               />
-              <Input
-                label="Navegador"
-                hint="É o navegador usado no teste. Serve para indicar se o erro depende do Chrome, Edge ou outro."
-                {...register('browser')}
+              <Controller
+                name="browser"
+                control={control}
+                render={({ field }) => (
+                  <SelectWithOther
+                    label="Navegador"
+                    hint="É o navegador usado no teste. O sistema tenta preencher automaticamente; use Outro se precisar."
+                    options={BROWSERS}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
               />
-              <Input
-                label="Sistema operacional"
-                hint="É o sistema do computador ou celular. Serve para registrar Windows, macOS, Android ou iOS."
-                {...register('operatingSystem')}
+              <Controller
+                name="operatingSystem"
+                control={control}
+                render={({ field }) => (
+                  <SelectWithOther
+                    label="Sistema operacional"
+                    hint="É o sistema do computador ou celular. O sistema tenta preencher automaticamente; use Outro se precisar."
+                    options={OPERATING_SYSTEMS}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
               />
-              <Input
-                label="Dispositivo"
-                hint="É o aparelho usado no teste, como desktop ou celular. Serve para saber em qual tela o bug surgiu."
-                {...register('device')}
+              <Controller
+                name="device"
+                control={control}
+                render={({ field }) => (
+                  <SelectWithOther
+                    label="Dispositivo"
+                    hint="É o aparelho usado no teste. O sistema tenta preencher automaticamente; use Outro se precisar."
+                    options={DEVICES}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
               />
             </Card>
             <Card className="grid gap-4">
@@ -511,10 +556,18 @@ export function IssueFormPage() {
               hint="É o comportamento depois do ajuste. Serve para confirmar se o problema foi resolvido."
               {...register('resultAfterCorrection')}
             />
-            <Input
-              label="Versão corrigida"
-              hint="É a versão em que a correção entrou. Serve para saber a partir de qual build o erro não deve mais ocorrer."
-              {...register('correctedVersion')}
+            <Controller
+              name="correctedVersion"
+              control={control}
+              render={({ field }) => (
+                <VersionField
+                  label="Versão corrigida"
+                  hint="É a versão em que a correção entrou. Use Patch, Minor ou Major a partir da versão da ocorrência."
+                  value={field.value}
+                  onChange={field.onChange}
+                  baseVersion={watch('version')}
+                />
+              )}
             />
             <Input
               label="Data da correção"

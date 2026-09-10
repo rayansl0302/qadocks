@@ -114,4 +114,31 @@ export const ISSUE_STATUSES: IssueStatus[] = [
 export const PROJECT_STATUSES: ProjectStatus[] = ['ativo', 'concluido', 'arquivado'];
 export const CYCLE_STATUSES: CycleStatus[] = ['ativo', 'concluido', 'arquivado'];
 
+export const ENVIRONMENTS = [
+  'Desenvolvimento',
+  'QA',
+  'Homologação',
+  'Staging',
+  'Produção',
+  'Treinamento',
+];
+
+export const CYCLE_NAMES = [
+  'Homologação',
+  'Homologação - Sprint 01',
+  'Homologação - Sprint 02',
+  'Regressão',
+  'Smoke Test',
+  'Teste de Login',
+  'Teste do Checkout',
+  'Homologação Final',
+  'Reteste',
+];
+
+export const BROWSERS = ['Chrome', 'Edge', 'Firefox', 'Safari', 'Opera'];
+
+export const OPERATING_SYSTEMS = ['Windows 10/11', 'Windows', 'macOS', 'Linux', 'Android', 'iOS'];
+
+export const DEVICES = ['Desktop', 'Notebook', 'Tablet', 'Celular'];
+
 export const LARGE_IMAGE_BYTES = 5 * 1024 * 1024;
