@@ -77,7 +77,6 @@ export function LoginPage() {
           type="email"
           autoComplete="email"
           error={errors.email?.message}
-          hint="É o e-mail da sua conta. Serve para identificar o login."
           {...register('email')}
         />
         <Input
@@ -85,7 +84,6 @@ export function LoginPage() {
           type="password"
           autoComplete="current-password"
           error={errors.password?.message}
-          hint="É a senha da conta. Serve para autenticar o acesso aos projetos e relatórios."
           {...register('password')}
         />
         <Button type="submit" disabled={isSubmitting || !configured}>
