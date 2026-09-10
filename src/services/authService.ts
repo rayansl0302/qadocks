@@ -1,8 +1,11 @@
 import {
+  EmailAuthProvider,
   createUserWithEmailAndPassword,
+  reauthenticateWithCredential,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
+  updatePassword,
   updateProfile,
   type User,
 } from 'firebase/auth';
@@ -29,6 +32,17 @@ export async function logoutUser(): Promise<void> {
 
 export async function recoverPassword(email: string): Promise<void> {
   await sendPasswordResetEmail(getFirebaseAuth(), email);
+}
+
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  const auth = getFirebaseAuth();
+  const current = auth.currentUser;
+  if (!current || !current.email) {
+    throw new Error('Usuário não autenticado.');
+  }
+  const credential = EmailAuthProvider.credential(current.email, currentPassword);
+  await reauthenticateWithCredential(current, credential);
+  await updatePassword(current, newPassword);
 }
 
 export async function updateUserProfile(displayName: string): Promise<AppUser> {

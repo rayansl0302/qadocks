@@ -8,13 +8,25 @@ import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
 import { getErrorMessage } from '@/lib/errors';
-import { updateUserProfile } from '@/services/authService';
+import { changePassword, updateUserProfile } from '@/services/authService';
 
 const schema = z.object({
   displayName: z.string().min(2, 'Informe o nome que deve aparecer no relatório.'),
 });
 
+const passwordSchema = z
+  .object({
+    currentPassword: z.string().min(6, 'Informe a senha atual.'),
+    newPassword: z.string().min(6, 'A nova senha deve ter pelo menos 6 caracteres.'),
+    confirmPassword: z.string().min(6, 'Confirme a nova senha.'),
+  })
+  .refine((values) => values.newPassword === values.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'As senhas não coincidem.',
+  });
+
 type FormValues = z.infer<typeof schema>;
+type PasswordFormValues = z.infer<typeof passwordSchema>;
 
 export function ProfilePage() {
   const { user, setUser } = useAuth();
@@ -29,6 +41,30 @@ export function ProfilePage() {
       displayName: user?.displayName ?? '',
     },
   });
+
+  const {
+    register: registerPassword,
+    handleSubmit: handlePasswordSubmit,
+    reset: resetPassword,
+    formState: { errors: passwordErrors, isSubmitting: isChangingPassword },
+  } = useForm<PasswordFormValues>({
+    resolver: zodResolver(passwordSchema),
+    defaultValues: {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+    },
+  });
+
+  async function onChangePassword(values: PasswordFormValues) {
+    try {
+      await changePassword(values.currentPassword, values.newPassword);
+      resetPassword();
+      showToast('Senha atualizada.');
+    } catch (error) {
+      showToast(getErrorMessage(error), 'error');
+    }
+  }
 
   async function onSubmit(values: FormValues) {
     try {
@@ -64,6 +100,41 @@ export function ProfilePage() {
           <div className="flex justify-end">
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Salvando...' : 'Salvar nome'}
+            </Button>
+          </div>
+        </form>
+      </Card>
+
+      <Card className="mt-6 max-w-5xl">
+        <h2 className="mb-4 font-display text-2xl">Alterar senha</h2>
+        <form className="grid gap-4" onSubmit={handlePasswordSubmit(onChangePassword)}>
+          <Input
+            label="Senha atual"
+            type="password"
+            autoComplete="current-password"
+            error={passwordErrors.currentPassword?.message}
+            hint="É a senha que você usa hoje. Serve para confirmar que é você quem está trocando."
+            {...registerPassword('currentPassword')}
+          />
+          <Input
+            label="Nova senha"
+            type="password"
+            autoComplete="new-password"
+            error={passwordErrors.newPassword?.message}
+            hint="É a nova senha da conta. Deve ter pelo menos 6 caracteres."
+            {...registerPassword('newPassword')}
+          />
+          <Input
+            label="Confirmar nova senha"
+            type="password"
+            autoComplete="new-password"
+            error={passwordErrors.confirmPassword?.message}
+            hint="Repita a nova senha. Serve para evitar erro de digitação."
+            {...registerPassword('confirmPassword')}
+          />
+          <div className="flex justify-end">
+            <Button type="submit" disabled={isChangingPassword}>
+              {isChangingPassword ? 'Salvando...' : 'Salvar senha'}
             </Button>
           </div>
         </form>

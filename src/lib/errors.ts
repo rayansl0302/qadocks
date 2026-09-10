@@ -5,6 +5,7 @@ const FIREBASE_MESSAGES: Record<string, string> = {
   'auth/user-not-found': 'E-mail ou senha incorretos.',
   'auth/wrong-password': 'E-mail ou senha incorretos.',
   'auth/weak-password': 'A senha deve ter pelo menos 6 caracteres.',
+  'auth/requires-recent-login': 'Confirme a senha atual para continuar.',
   'auth/too-many-requests': 'Muitas tentativas. Tente novamente em instantes.',
   'auth/network-request-failed': 'Falha de conexão. Verifique sua internet.',
 };
