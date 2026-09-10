@@ -25,6 +25,10 @@ function saveRememberedUser(email: string): void {
   localStorage.setItem(REMEMBERED_USER_KEY, email);
 }
 
+function clearRememberedUser(): void {
+  localStorage.removeItem(REMEMBERED_USER_KEY);
+}
+
 function getRememberedUser(): string {
   return localStorage.getItem(REMEMBERED_USER_KEY) ?? '';
 }
@@ -36,6 +40,7 @@ export function LoginPage() {
   const { showToast } = useToast();
   const configured = isFirebaseConfigured();
   const [recovering, setRecovering] = useState(false);
+  const [saveLogin, setSaveLogin] = useState(Boolean(getRememberedUser()));
   const from =
     typeof location.state === 'object' && location.state && 'from' in location.state
       ? String(location.state.from)
@@ -77,7 +82,11 @@ export function LoginPage() {
   async function onSubmit(values: FormValues) {
     try {
       await loginUser(values.email, values.password);
-      saveRememberedUser(values.email);
+      if (saveLogin) {
+        saveRememberedUser(values.email);
+      } else {
+        clearRememberedUser();
+      }
     } catch (error) {
       showToast(getErrorMessage(error), 'error');
     }
@@ -105,6 +114,15 @@ export function LoginPage() {
           error={errors.password?.message}
           {...register('password')}
         />
+        <label className="flex items-center gap-3 text-sm text-ink">
+          <input
+            type="checkbox"
+            checked={saveLogin}
+            onChange={(event) => setSaveLogin(event.target.checked)}
+            className="h-4 w-4 accent-teal"
+          />
+          Salvar login
+        </label>
         <Button type="submit" disabled={isSubmitting || !configured}>
           {isSubmitting ? 'Entrando...' : 'Entrar'}
         </Button>
