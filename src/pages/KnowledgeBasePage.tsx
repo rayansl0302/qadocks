@@ -7,6 +7,7 @@ const sections = [
   { id: 'conta', label: 'Conta e acesso' },
   { id: 'dashboard', label: 'Dashboard' },
   { id: 'projetos', label: 'Projetos' },
+  { id: 'casos', label: 'Casos de teste' },
   { id: 'ciclos', label: 'Ciclos de teste' },
   { id: 'ocorrencias', label: 'Ocorrências' },
   { id: 'evidencias', label: 'Evidências' },
@@ -39,9 +40,9 @@ export function KnowledgeBasePage() {
           <Card id="visao">
             <h2 className="font-display text-2xl">Visão geral</h2>
             <p className="mt-3 text-sm text-muted">
-              O sistema organiza o trabalho de QA em projetos, ciclos, ocorrências e evidências, e gera um PDF
-              profissional. Você preenche o conteúdo do teste; o sistema cuida da estrutura, da numeração e do
-              relatório.
+              O sistema organiza o trabalho de QA em projetos, casos de teste, ciclos, ocorrências e evidências.
+              Depois da reunião com o cliente, você registra o escopo em casos e cenários e gera o Excel. Durante a
+              execução, registra ocorrências e gera o PDF profissional.
             </p>
           </Card>
 
@@ -50,6 +51,7 @@ export function KnowledgeBasePage() {
             <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-muted">
               <li>Entre com e-mail e senha.</li>
               <li>Crie um projeto (o sistema, cliente ou aplicativo testado).</li>
+              <li>No menu Casos de teste, registre o caso e os cenários do escopo e gere o Excel.</li>
               <li>Crie um ciclo de teste (sprint, homologação, regressão).</li>
               <li>Registre ocorrências: Bug, Feature, Melhoria ou Correção.</li>
               <li>Anexe prints com legenda.</li>
@@ -98,12 +100,41 @@ export function KnowledgeBasePage() {
                 <strong className="text-ink">Editar:</strong> atualiza os dados do projeto.
               </li>
               <li>
-                <strong className="text-ink">Excluir:</strong> remove o projeto, os ciclos, as ocorrências e as
-                evidências.
+                <strong className="text-ink">Excluir:</strong> remove o projeto, os ciclos, as ocorrências, as
+                evidências e os casos de teste.
               </li>
               <li>
                 <strong className="text-ink">Cliente:</strong> é o nome do cliente dentro do projeto, não um cadastro
                 separado.
+              </li>
+            </ul>
+          </Card>
+
+          <Card id="casos">
+            <h2 className="font-display text-2xl">Casos de teste</h2>
+            <p className="mt-3 text-sm text-muted">
+              Depois da reunião com o cliente, o QA registra o que será testado. O caso é a planilha (por exemplo,
+              Teste de Login). Os cenários ficam dentro do caso: caminho feliz e testes negativos. Não existe tela
+              separada de cenário.
+            </p>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-muted">
+              <li>
+                <strong className="text-ink">Menu Casos de teste:</strong> lista todos os casos dos seus projetos.
+              </li>
+              <li>
+                <strong className="text-ink">Novo caso:</strong> nome, descrição, passos iniciais e cenários com
+                passos (cenário, dados, resultado esperado, resultado Passou/Falhou/Bloqueado, resultado obtido e
+                comentário).
+              </li>
+              <li>
+                <strong className="text-ink">Caminho feliz:</strong> fluxo que deve funcionar do início ao fim.
+              </li>
+              <li>
+                <strong className="text-ink">Teste negativo:</strong> fluxo que deve falhar ou ser bloqueado.
+              </li>
+              <li>
+                <strong className="text-ink">Gerar Excel:</strong> baixa o plano de testes com capa, seções coloridas
+                e a coluna Resultado com Passou, Falhou ou Bloqueado para marcar na execução.
               </li>
             </ul>
           </Card>

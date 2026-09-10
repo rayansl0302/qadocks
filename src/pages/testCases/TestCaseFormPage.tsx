@@ -12,16 +12,17 @@ import { Spinner } from '@/components/ui/Spinner';
 import { Textarea } from '@/components/ui/Textarea';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
-import { SCENARIO_TYPE_LABEL, SCENARIO_TYPES } from '@/lib/constants';
+import { SCENARIO_TYPE_LABEL, SCENARIO_TYPES, STEP_FEEDBACK_LABEL, STEP_FEEDBACKS } from '@/lib/constants';
 import { getErrorMessage } from '@/lib/errors';
 import { getProject } from '@/services/projectService';
 import { createTestCase, getTestCase, updateTestCase } from '@/services/testCaseService';
-import type { TestScenarioType } from '@/types';
+import type { TestScenarioType, TestStepFeedback } from '@/types';
 
 const stepSchema = z.object({
   action: z.string().min(1, 'Informe o passo.'),
   data: z.string(),
   expected: z.string(),
+  feedback: z.enum(['', 'passed', 'failed', 'blocked']),
   result: z.string(),
   comment: z.string(),
 });
@@ -42,8 +43,8 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-function emptyStep() {
-  return { action: '', data: '', expected: '', result: '', comment: '' };
+function emptyStep(): FormValues['setupSteps'][number] {
+  return { action: '', data: '', expected: '', feedback: '' as TestStepFeedback, result: '', comment: '' };
 }
 
 function emptyScenario(type: TestScenarioType, title = ''): FormValues['scenarios'][number] {
@@ -65,7 +66,7 @@ export function TestCaseFormPage() {
       name: '',
       description: '',
       setupSteps: [
-        { action: 'Abrir a URL do sistema', data: '', expected: 'A URL abre.', result: '', comment: '' },
+        { ...emptyStep(), action: 'Abrir a URL do sistema', expected: 'A URL abre.' },
       ],
       scenarios: [emptyScenario('happy_path'), emptyScenario('negative', 'Cenário 1')],
     },
@@ -291,6 +292,17 @@ function StepFields({
         <Input label="Cenário / passo" error={error} {...form.register(`${name}.action`)} />
         <Input label="Dados" {...form.register(`${name}.data`)} />
         <Input label="Resultado esperado" {...form.register(`${name}.expected`)} />
+        <Select
+          label="Resultado"
+          options={[
+            { value: '', label: '—' },
+            ...STEP_FEEDBACKS.map((feedback) => ({
+              value: feedback,
+              label: STEP_FEEDBACK_LABEL[feedback],
+            })),
+          ]}
+          {...form.register(`${name}.feedback`)}
+        />
         <Input label="Resultado obtido" {...form.register(`${name}.result`)} />
         <div className="md:col-span-2">
           <Input label="Comentário" {...form.register(`${name}.comment`)} />

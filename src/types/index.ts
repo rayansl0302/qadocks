@@ -160,10 +160,13 @@ export interface ReportWarning {
 
 export type TestScenarioType = 'happy_path' | 'negative';
 
+export type TestStepFeedback = '' | 'passed' | 'failed' | 'blocked';
+
 export interface TestStep {
   action: string;
   data: string;
   expected: string;
+  feedback: TestStepFeedback;
   result: string;
   comment: string;
 }

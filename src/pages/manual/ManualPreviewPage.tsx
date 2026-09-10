@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Textarea } from '@/components/ui/Textarea';
 
-const nav = ['Dashboard', 'Projetos', 'Relatórios', 'Base de conhecimento', 'Perfil'];
+const nav = ['Dashboard', 'Projetos', 'Casos de teste', 'Relatórios', 'Base de conhecimento', 'Perfil'];
 
 export function ManualPreviewPage() {
   const { screen = 'dashboard' } = useParams();
@@ -49,6 +49,7 @@ export function ManualPreviewPage() {
 function isActive(screen: string, item: string): boolean {
   if (item === 'Dashboard') return screen === 'dashboard';
   if (item === 'Projetos') return ['projects', 'project-form', 'cycle-form', 'cycle-detail', 'issue-form', 'follow-up', 'report'].includes(screen);
+  if (item === 'Casos de teste') return ['test-cases', 'test-case-detail'].includes(screen);
   if (item === 'Relatórios') return screen === 'reports';
   if (item === 'Perfil') return screen === 'profile';
   return false;
@@ -59,6 +60,8 @@ function crumb(screen: string): string {
     dashboard: 'Dashboard',
     projects: 'Projetos',
     'project-form': 'Projetos › Novo projeto',
+    'test-cases': 'Casos de teste',
+    'test-case-detail': 'Casos de teste › Teste de Login - simples',
     'cycle-form': 'Portal Administrativo › Novo ciclo',
     'cycle-detail': 'Portal Administrativo › Homologação',
     'issue-form': 'Homologação › Nova ocorrência',
@@ -73,6 +76,8 @@ function crumb(screen: string): string {
 function renderScreen(screen: string) {
   if (screen === 'projects') return <ProjectsScreen />;
   if (screen === 'project-form') return <ProjectFormScreen />;
+  if (screen === 'test-cases') return <TestCasesScreen />;
+  if (screen === 'test-case-detail') return <TestCaseDetailScreen />;
   if (screen === 'cycle-form') return <CycleFormScreen />;
   if (screen === 'cycle-detail') return <CycleDetailScreen />;
   if (screen === 'issue-form') return <IssueFormScreen />;
@@ -153,6 +158,90 @@ function ProjectFormScreen() {
             <Button>Salvar</Button>
           </div>
         </div>
+      </Card>
+    </div>
+  );
+}
+
+function TestCasesScreen() {
+  return (
+    <div>
+      <PageHeader
+        title="Casos de teste"
+        description="Depois da reunião com o cliente, registre o caso. Os cenários ficam dentro dele."
+        actions={<Button>Novo caso</Button>}
+      />
+      <Card>
+        <p className="text-xs uppercase tracking-[0.14em] text-muted">Portal Administrativo</p>
+        <h2 className="mt-2 font-display text-2xl">Teste de Login - simples</h2>
+        <p className="mt-1 text-sm text-muted">Caso de exemplo após o entendimento do escopo de login com o cliente.</p>
+        <p className="mt-3 text-sm">4 cenários · 8 passos · Caminho feliz · Teste negativo</p>
+      </Card>
+    </div>
+  );
+}
+
+function TestCaseDetailScreen() {
+  return (
+    <div>
+      <PageHeader
+        eyebrow="Portal Administrativo"
+        title="Teste de Login - simples"
+        description="Caso e cenários de teste do escopo."
+        actions={
+          <>
+            <Button variant="secondary">Gerar Excel</Button>
+            <Button>Editar</Button>
+          </>
+        }
+      />
+      <Card className="overflow-x-auto">
+        <table className="min-w-[720px] w-full border-collapse text-sm">
+          <thead>
+            <tr className="bg-[#14665C] text-white">
+              <th className="border border-line px-3 py-2 text-left font-semibold">Cenário / passo</th>
+              <th className="border border-line px-3 py-2 text-left font-semibold">Dados</th>
+              <th className="border border-line px-3 py-2 text-left font-semibold">Resultado esperado</th>
+              <th className="border border-line px-3 py-2 text-left font-semibold">Resultado obtido</th>
+              <th className="border border-line px-3 py-2 text-left font-semibold">Comentário</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="border border-line px-3 py-2">Abrir a URL do teste</td>
+              <td className="border border-line px-3 py-2">https://opensource-demo.orangehrmlive.com</td>
+              <td className="border border-line px-3 py-2">A URL abre.</td>
+              <td className="border border-line px-3 py-2">—</td>
+              <td className="border border-line px-3 py-2">—</td>
+            </tr>
+            <tr className="bg-emerald-100">
+              <td className="border border-line px-3 py-2 font-semibold" colSpan={5}>
+                Caminho feliz — quando o fluxo acontece da forma correta
+              </td>
+            </tr>
+            <tr>
+              <td className="border border-line px-3 py-2">Preencher o nome de usuário corretamente</td>
+              <td className="border border-line px-3 py-2">Admin</td>
+              <td className="border border-line px-3 py-2">Nome de usuário inserido</td>
+              <td className="border border-line px-3 py-2">—</td>
+              <td className="border border-line px-3 py-2">—</td>
+            </tr>
+            <tr className="bg-amber-100">
+              <td className="border border-line px-3 py-2 font-semibold" colSpan={5}>
+                Testes negativos — quando o fluxo não acontece da forma correta
+              </td>
+            </tr>
+            <tr>
+              <td className="border border-line px-3 py-2 font-semibold">
+                Cenário 1 — Usuário tenta conectar sem preencher nenhuma informação
+              </td>
+              <td className="border border-line px-3 py-2">—</td>
+              <td className="border border-line px-3 py-2">Usuário não acessou o conteúdo. Campos com Required.</td>
+              <td className="border border-line px-3 py-2">—</td>
+              <td className="border border-line px-3 py-2">—</td>
+            </tr>
+          </tbody>
+        </table>
       </Card>
     </div>
   );

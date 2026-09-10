@@ -2,7 +2,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { EXAMPLE_TEST_CASE, EXAMPLE_TEST_CASE_NAME } from '@/lib/testCaseExample';
 import { asString, toDate } from '@/lib/firestore';
 import { getFirebaseAuth, getFirebaseDb } from '@/services/firebase';
-import type { TestCase, TestScenario, TestScenarioType, TestStep } from '@/types';
+import type { TestCase, TestScenario, TestScenarioType, TestStep, TestStepFeedback } from '@/types';
 
 export interface TestCaseInput {
   name: string;
@@ -18,15 +18,24 @@ function asRecord(value: unknown): Record<string, unknown> | null {
   return null;
 }
 
+function mapFeedback(value: unknown): TestStepFeedback {
+  const feedback = asString(value);
+  if (feedback === 'passed' || feedback === 'failed' || feedback === 'blocked') {
+    return feedback;
+  }
+  return '';
+}
+
 function mapStep(value: unknown): TestStep {
   const data = asRecord(value);
   if (!data) {
-    return { action: '', data: '', expected: '', result: '', comment: '' };
+    return { action: '', data: '', expected: '', feedback: '', result: '', comment: '' };
   }
   return {
     action: asString(data.action),
     data: asString(data.data),
     expected: asString(data.expected),
+    feedback: mapFeedback(data.feedback),
     result: asString(data.result),
     comment: asString(data.comment),
   };

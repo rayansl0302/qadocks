@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { Spinner } from '@/components/ui/Spinner';
 import { useToast } from '@/contexts/ToastContext';
-import { SCENARIO_SECTION_LABEL } from '@/lib/constants';
+import { SCENARIO_SECTION_LABEL, STEP_FEEDBACK_LABEL } from '@/lib/constants';
 import { getErrorMessage } from '@/lib/errors';
 import { buildTestCaseExcelFileName, downloadTestCasesExcel } from '@/lib/testCaseExcel';
 import { getProject } from '@/services/projectService';
@@ -84,7 +84,7 @@ export function TestCaseDetailPage() {
             <Button
               variant="secondary"
               onClick={() =>
-                downloadTestCasesExcel([testCase], buildTestCaseExcelFileName(project.name, testCase.name))
+                void downloadTestCasesExcel([testCase], buildTestCaseExcelFileName(project.name, testCase.name))
               }
             >
               Gerar Excel
@@ -106,6 +106,7 @@ export function TestCaseDetailPage() {
               <th className="border border-line px-3 py-2 text-left font-semibold">Cenário</th>
               <th className="border border-line px-3 py-2 text-left font-semibold">Dados</th>
               <th className="border border-line px-3 py-2 text-left font-semibold">Resultado esperado</th>
+              <th className="border border-line px-3 py-2 text-left font-semibold">Resultado</th>
               <th className="border border-line px-3 py-2 text-left font-semibold">Resultado obtido</th>
               <th className="border border-line px-3 py-2 text-left font-semibold">Comentário</th>
             </tr>
@@ -146,7 +147,7 @@ function ScenarioBody({ scenarios }: { scenarios: TestCase['scenarios'] }) {
       rows.push({
         key: `title-${scenarioIndex}`,
         title: true,
-        step: { action: scenario.title, data: '', expected: scenario.expected, result: '', comment: '' },
+        step: { action: scenario.title, data: '', expected: scenario.expected, feedback: '', result: '', comment: '' },
       });
     }
     scenario.steps.forEach((step, stepIndex) => {
@@ -160,7 +161,7 @@ function ScenarioBody({ scenarios }: { scenarios: TestCase['scenarios'] }) {
         if (row.type) {
           return (
             <tr key={row.key} className="bg-yellow-300">
-              <td className="border border-line px-3 py-2 font-semibold" colSpan={5}>
+              <td className="border border-line px-3 py-2 font-semibold" colSpan={6}>
                 {SCENARIO_SECTION_LABEL[row.type]}
               </td>
             </tr>
@@ -182,6 +183,23 @@ function StepRow({ step, strong }: { step: TestStep; strong?: boolean }) {
       <td className={cell}>{step.action || '—'}</td>
       <td className="border border-line px-3 py-2">{step.data || '—'}</td>
       <td className="border border-line px-3 py-2">{step.expected || '—'}</td>
+      <td className="border border-line px-3 py-2">
+        {step.feedback ? (
+          <span
+            className={
+              step.feedback === 'passed'
+                ? 'rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-800'
+                : step.feedback === 'failed'
+                  ? 'rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-800'
+                  : 'rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800'
+            }
+          >
+            {STEP_FEEDBACK_LABEL[step.feedback]}
+          </span>
+        ) : (
+          '—'
+        )}
+      </td>
       <td className="border border-line px-3 py-2">{step.result || '—'}</td>
       <td className="border border-line px-3 py-2">{step.comment || '—'}</td>
     </tr>

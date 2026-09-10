@@ -8,6 +8,7 @@ import type {
   ReportTemplate,
   Severity,
   TestScenarioType,
+  TestStepFeedback,
 } from '@/types';
 
 export const ISSUE_TYPE_LABEL: Record<IssueType, string> = {
@@ -153,5 +154,13 @@ export const SCENARIO_SECTION_LABEL: Record<TestScenarioType, string> = {
 };
 
 export const SCENARIO_TYPES: TestScenarioType[] = ['happy_path', 'negative'];
+
+export const STEP_FEEDBACK_LABEL: Record<Exclude<TestStepFeedback, ''>, string> = {
+  passed: 'Passou',
+  failed: 'Falhou',
+  blocked: 'Bloqueado',
+};
+
+export const STEP_FEEDBACKS: Exclude<TestStepFeedback, ''>[] = ['passed', 'failed', 'blocked'];
 
 export const LARGE_IMAGE_BYTES = 5 * 1024 * 1024;

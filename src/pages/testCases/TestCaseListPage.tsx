@@ -71,7 +71,7 @@ export function TestCaseListPage() {
     if (!project || testCases.length === 0) {
       return;
     }
-    downloadTestCasesExcel(testCases, buildTestCaseExcelFileName(project.name));
+    void downloadTestCasesExcel(testCases, buildTestCaseExcelFileName(project.name));
   }
 
   if (loading || !project) {
@@ -126,7 +126,7 @@ export function TestCaseListPage() {
                   <Button
                     variant="secondary"
                     onClick={() =>
-                      downloadTestCasesExcel([testCase], buildTestCaseExcelFileName(project.name, testCase.name))
+                      void downloadTestCasesExcel([testCase], buildTestCaseExcelFileName(project.name, testCase.name))
                     }
                   >
                     Gerar Excel

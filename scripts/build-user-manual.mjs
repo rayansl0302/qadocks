@@ -13,6 +13,8 @@ const screens = [
   { id: 'dashboard', url: `${base}/_manual-preview/dashboard`, title: 'Dashboard' },
   { id: 'projects', url: `${base}/_manual-preview/projects`, title: 'Projetos' },
   { id: 'project-form', url: `${base}/_manual-preview/project-form`, title: 'Novo projeto' },
+  { id: 'test-cases', url: `${base}/_manual-preview/test-cases`, title: 'Casos de teste' },
+  { id: 'test-case-detail', url: `${base}/_manual-preview/test-case-detail`, title: 'Caso de teste' },
   { id: 'cycle-form', url: `${base}/_manual-preview/cycle-form`, title: 'Novo ciclo' },
   { id: 'cycle-detail', url: `${base}/_manual-preview/cycle-detail`, title: 'Ciclo de teste' },
   { id: 'issue-form', url: `${base}/_manual-preview/issue-form`, title: 'Nova ocorrência' },
@@ -44,38 +46,48 @@ const guide = [
     text: 'Preencha nome, descrição, cliente, versão, ambiente e status. O Responsável pelo QA vem do seu perfil. Ambiente e status são listas. Versão sobe com Patch, Minor ou Major.',
   },
   {
+    id: 'test-cases',
+    title: '5. Casos de teste',
+    text: 'No menu Casos de teste ficam os planos do escopo, depois da reunião com o cliente. Cada card é um caso, como Teste de Login. Os cenários (caminho feliz e testes negativos) ficam dentro do caso. Use Novo caso para cadastrar outro.',
+  },
+  {
+    id: 'test-case-detail',
+    title: '6. Plano do caso e Excel',
+    text: 'Ao abrir o caso você vê a planilha: passos iniciais, caminho feliz e testes negativos. As colunas são cenário, dados, resultado esperado, resultado obtido e comentário. Clique em Gerar Excel para baixar o plano de testes pronto para a execução.',
+  },
+  {
     id: 'cycle-form',
-    title: '5. Novo ciclo de teste',
+    title: '7. Novo ciclo de teste',
     text: 'Dentro do projeto, crie um ciclo (Homologação, Regressão, Smoke Test). Informe período, versão e ambiente. O nome do ciclo também pode ser escolhido na lista.',
   },
   {
     id: 'cycle-detail',
-    title: '6. Tela do ciclo',
+    title: '8. Tela do ciclo',
     text: 'A tela do ciclo lista as ocorrências com tipo, severidade, prioridade e status. Dali você cria ocorrência, gera o relatório PDF ou abre o Acompanhamento.',
   },
   {
     id: 'issue-form',
-    title: '7. Nova ocorrência',
+    title: '9. Nova ocorrência',
     text: 'Escolha o tipo: Bug, Feature, Melhoria ou Correção. Os campos mudam conforme o tipo. Bug pede passos, resultado esperado e encontrado. Anexe prints na área de evidências.',
   },
   {
     id: 'follow-up',
-    title: '8. Acompanhamento',
+    title: '10. Acompanhamento',
     text: 'O acompanhamento separa o que foi resolvido (Aprovado ou Rejeitado) do que ficou pendente. Dá para gerar o PDF das duas listas ou a 2ª versão só com pendências.',
   },
   {
     id: 'report',
-    title: '9. Gerar relatório PDF',
+    title: '11. Gerar relatório PDF',
     text: 'Escolha título, modelo (Profissional, Compacto ou Executivo) e o que entra no PDF: capa, resumo, gráficos, evidências e conclusão. O arquivo segue QA_Projeto_Ciclo_AAAA-MM-DD.pdf.',
   },
   {
     id: 'reports',
-    title: '10. Histórico de relatórios',
+    title: '12. Histórico de relatórios',
     text: 'O menu Relatórios guarda as emissões. Use Gerar novamente para voltar à tela do ciclo e emitir outra vez.',
   },
   {
     id: 'profile',
-    title: '11. Perfil',
+    title: '13. Perfil',
     text: 'No Perfil você altera o nome que aparece como Responsável pelo QA e troca a senha. Na conta do administrador existe a aba Criar conta para liberar acesso a outras pessoas.',
   },
 ];
@@ -118,7 +130,7 @@ const html = `<!DOCTYPE html>
   <section class="cover">
     <p class="kicker">QA Report Generator</p>
     <h1>Como usar o sistema</h1>
-    <p class="lead">Manual passo a passo com as telas reais: do login ao PDF do relatório.</p>
+    <p class="lead">Manual passo a passo com as telas reais: do login ao plano de testes em Excel e ao PDF do relatório.</p>
   </section>
   ${guide
     .map(

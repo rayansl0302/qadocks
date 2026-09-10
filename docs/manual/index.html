@@ -24,7 +24,7 @@
   <section class="cover">
     <p class="kicker">QA Report Generator</p>
     <h1>Como usar o sistema</h1>
-    <p class="lead">Manual passo a passo com as telas reais: do login ao PDF do relatório.</p>
+    <p class="lead">Manual passo a passo com as telas reais: do login ao plano de testes em Excel e ao PDF do relatório.</p>
   </section>
   
   <section class="section">
@@ -52,45 +52,57 @@
     <p class="caption">Tela: Novo projeto</p>
   </section>
   <section class="section">
-    <h2>5. Novo ciclo de teste</h2>
+    <h2>5. Casos de teste</h2>
+    <p>No menu Casos de teste ficam os planos do escopo, depois da reunião com o cliente. Cada card é um caso, como Teste de Login. Os cenários (caminho feliz e testes negativos) ficam dentro do caso. Use Novo caso para cadastrar outro.</p>
+    <img src="prints/test-cases.png" alt="5. Casos de teste" />
+    <p class="caption">Tela: Casos de teste</p>
+  </section>
+  <section class="section">
+    <h2>6. Plano do caso e Excel</h2>
+    <p>Ao abrir o caso você vê a planilha: passos iniciais, caminho feliz e testes negativos. As colunas são cenário, dados, resultado esperado, resultado obtido e comentário. Clique em Gerar Excel para baixar o plano de testes pronto para a execução.</p>
+    <img src="prints/test-case-detail.png" alt="6. Plano do caso e Excel" />
+    <p class="caption">Tela: Caso de teste</p>
+  </section>
+  <section class="section">
+    <h2>7. Novo ciclo de teste</h2>
     <p>Dentro do projeto, crie um ciclo (Homologação, Regressão, Smoke Test). Informe período, versão e ambiente. O nome do ciclo também pode ser escolhido na lista.</p>
-    <img src="prints/cycle-form.png" alt="5. Novo ciclo de teste" />
+    <img src="prints/cycle-form.png" alt="7. Novo ciclo de teste" />
     <p class="caption">Tela: Novo ciclo</p>
   </section>
   <section class="section">
-    <h2>6. Tela do ciclo</h2>
+    <h2>8. Tela do ciclo</h2>
     <p>A tela do ciclo lista as ocorrências com tipo, severidade, prioridade e status. Dali você cria ocorrência, gera o relatório PDF ou abre o Acompanhamento.</p>
-    <img src="prints/cycle-detail.png" alt="6. Tela do ciclo" />
+    <img src="prints/cycle-detail.png" alt="8. Tela do ciclo" />
     <p class="caption">Tela: Ciclo de teste</p>
   </section>
   <section class="section">
-    <h2>7. Nova ocorrência</h2>
+    <h2>9. Nova ocorrência</h2>
     <p>Escolha o tipo: Bug, Feature, Melhoria ou Correção. Os campos mudam conforme o tipo. Bug pede passos, resultado esperado e encontrado. Anexe prints na área de evidências.</p>
-    <img src="prints/issue-form.png" alt="7. Nova ocorrência" />
+    <img src="prints/issue-form.png" alt="9. Nova ocorrência" />
     <p class="caption">Tela: Nova ocorrência</p>
   </section>
   <section class="section">
-    <h2>8. Acompanhamento</h2>
+    <h2>10. Acompanhamento</h2>
     <p>O acompanhamento separa o que foi resolvido (Aprovado ou Rejeitado) do que ficou pendente. Dá para gerar o PDF das duas listas ou a 2ª versão só com pendências.</p>
-    <img src="prints/follow-up.png" alt="8. Acompanhamento" />
+    <img src="prints/follow-up.png" alt="10. Acompanhamento" />
     <p class="caption">Tela: Acompanhamento</p>
   </section>
   <section class="section">
-    <h2>9. Gerar relatório PDF</h2>
+    <h2>11. Gerar relatório PDF</h2>
     <p>Escolha título, modelo (Profissional, Compacto ou Executivo) e o que entra no PDF: capa, resumo, gráficos, evidências e conclusão. O arquivo segue QA_Projeto_Ciclo_AAAA-MM-DD.pdf.</p>
-    <img src="prints/report.png" alt="9. Gerar relatório PDF" />
+    <img src="prints/report.png" alt="11. Gerar relatório PDF" />
     <p class="caption">Tela: Gerar relatório</p>
   </section>
   <section class="section">
-    <h2>10. Histórico de relatórios</h2>
+    <h2>12. Histórico de relatórios</h2>
     <p>O menu Relatórios guarda as emissões. Use Gerar novamente para voltar à tela do ciclo e emitir outra vez.</p>
-    <img src="prints/reports.png" alt="10. Histórico de relatórios" />
+    <img src="prints/reports.png" alt="12. Histórico de relatórios" />
     <p class="caption">Tela: Histórico de relatórios</p>
   </section>
   <section class="section">
-    <h2>11. Perfil</h2>
+    <h2>13. Perfil</h2>
     <p>No Perfil você altera o nome que aparece como Responsável pelo QA e troca a senha. Na conta do administrador existe a aba Criar conta para liberar acesso a outras pessoas.</p>
-    <img src="prints/profile.png" alt="11. Perfil" />
+    <img src="prints/profile.png" alt="13. Perfil" />
     <p class="caption">Tela: Perfil</p>
   </section>
 </body>
