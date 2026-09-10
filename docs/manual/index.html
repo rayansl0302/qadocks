@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manual de uso — QA Report Generator</title>
+  <style>
+    @page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; color: #1c1917; background: #fffcf7; }
+    h1, h2 { font-family: Georgia, serif; }
+    .cover { min-height: 240mm; padding: 28mm 8mm 0; background: #0f3d3e; color: #fffcf7; page-break-after: always; }
+    .cover p.kicker { letter-spacing: .2em; text-transform: uppercase; font-size: 11px; opacity: .75; }
+    .cover h1 { font-size: 40px; line-height: 1.15; margin: 18px 0 16px; max-width: 420px; }
+    .cover .lead { font-size: 16px; max-width: 460px; opacity: .88; }
+    .section { page-break-after: always; }
+    .section:last-child { page-break-after: auto; }
+    h2 { font-size: 22px; color: #0f3d3e; margin: 0 0 10px; }
+    p { font-size: 12.5px; line-height: 1.55; color: #3f3a34; margin: 0 0 14px; }
+    img { width: 100%; border: 1px solid #ddd6c8; border-radius: 10px; }
+    .caption { font-size: 10px; color: #6f675d; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <p class="kicker">QA Report Generator</p>
+    <h1>Como usar o sistema</h1>
+    <p class="lead">Manual passo a passo com as telas reais: do login ao PDF do relatório.</p>
+  </section>
+  
+  <section class="section">
+    <h2>1. Entrar no sistema</h2>
+    <p>Abra o QA Report Generator e informe e-mail e senha. Marque Salvar login para o e-mail voltar preenchido na próxima vez. Use Recuperar senha se esquecer o acesso. O cadastro público não existe: novas contas são criadas só pelo administrador, no Perfil.</p>
+    <img src="prints/login.png" alt="1. Entrar no sistema" />
+    <p class="caption">Tela: Login</p>
+  </section>
+  <section class="section">
+    <h2>2. Dashboard</h2>
+    <p>Depois do login você cai no Dashboard. Ali aparecem totais de projetos, ciclos, ocorrências e relatórios, o ciclo em destaque e atalhos para abrir o ciclo ou gerar o PDF.</p>
+    <img src="prints/dashboard.png" alt="2. Dashboard" />
+    <p class="caption">Tela: Dashboard</p>
+  </section>
+  <section class="section">
+    <h2>3. Projetos</h2>
+    <p>Em Projetos ficam os sistemas testados. Cada card mostra cliente, nome, descrição e status. Clique no card para abrir o projeto ou em Novo projeto para cadastrar outro.</p>
+    <img src="prints/projects.png" alt="3. Projetos" />
+    <p class="caption">Tela: Projetos</p>
+  </section>
+  <section class="section">
+    <h2>4. Novo projeto</h2>
+    <p>Preencha nome, descrição, cliente, versão, ambiente e status. O Responsável pelo QA vem do seu perfil. Ambiente e status são listas. Versão sobe com Patch, Minor ou Major.</p>
+    <img src="prints/project-form.png" alt="4. Novo projeto" />
+    <p class="caption">Tela: Novo projeto</p>
+  </section>
+  <section class="section">
+    <h2>5. Novo ciclo de teste</h2>
+    <p>Dentro do projeto, crie um ciclo (Homologação, Regressão, Smoke Test). Informe período, versão e ambiente. O nome do ciclo também pode ser escolhido na lista.</p>
+    <img src="prints/cycle-form.png" alt="5. Novo ciclo de teste" />
+    <p class="caption">Tela: Novo ciclo</p>
+  </section>
+  <section class="section">
+    <h2>6. Tela do ciclo</h2>
+    <p>A tela do ciclo lista as ocorrências com tipo, severidade, prioridade e status. Dali você cria ocorrência, gera o relatório PDF ou abre o Acompanhamento.</p>
+    <img src="prints/cycle-detail.png" alt="6. Tela do ciclo" />
+    <p class="caption">Tela: Ciclo de teste</p>
+  </section>
+  <section class="section">
+    <h2>7. Nova ocorrência</h2>
+    <p>Escolha o tipo: Bug, Feature, Melhoria ou Correção. Os campos mudam conforme o tipo. Bug pede passos, resultado esperado e encontrado. Anexe prints na área de evidências.</p>
+    <img src="prints/issue-form.png" alt="7. Nova ocorrência" />
+    <p class="caption">Tela: Nova ocorrência</p>
+  </section>
+  <section class="section">
+    <h2>8. Acompanhamento</h2>
+    <p>O acompanhamento separa o que foi resolvido (Aprovado ou Rejeitado) do que ficou pendente. Dá para gerar o PDF das duas listas ou a 2ª versão só com pendências.</p>
+    <img src="prints/follow-up.png" alt="8. Acompanhamento" />
+    <p class="caption">Tela: Acompanhamento</p>
+  </section>
+  <section class="section">
+    <h2>9. Gerar relatório PDF</h2>
+    <p>Escolha título, modelo (Profissional, Compacto ou Executivo) e o que entra no PDF: capa, resumo, gráficos, evidências e conclusão. O arquivo segue QA_Projeto_Ciclo_AAAA-MM-DD.pdf.</p>
+    <img src="prints/report.png" alt="9. Gerar relatório PDF" />
+    <p class="caption">Tela: Gerar relatório</p>
+  </section>
+  <section class="section">
+    <h2>10. Histórico de relatórios</h2>
+    <p>O menu Relatórios guarda as emissões. Use Gerar novamente para voltar à tela do ciclo e emitir outra vez.</p>
+    <img src="prints/reports.png" alt="10. Histórico de relatórios" />
+    <p class="caption">Tela: Histórico de relatórios</p>
+  </section>
+  <section class="section">
+    <h2>11. Perfil</h2>
+    <p>No Perfil você altera o nome que aparece como Responsável pelo QA e troca a senha. Na conta do administrador existe a aba Criar conta para liberar acesso a outras pessoas.</p>
+    <img src="prints/profile.png" alt="11. Perfil" />
+    <p class="caption">Tela: Perfil</p>
+  </section>
+</body>
+</html>

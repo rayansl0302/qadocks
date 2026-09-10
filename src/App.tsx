@@ -20,6 +20,7 @@ import { ReportGeneratePage } from '@/pages/reports/ReportGeneratePage';
 import { KnowledgeBasePage } from '@/pages/KnowledgeBasePage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { ReportsPage } from '@/pages/reports/ReportsPage';
+import { ManualPreviewPage } from '@/pages/manual/ManualPreviewPage';
 
 export function App() {
   return (
@@ -56,6 +57,7 @@ export function App() {
         </Route>
       </Route>
 
+      <Route path="/_manual-preview/:screen" element={<ManualPreviewPage />} />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
