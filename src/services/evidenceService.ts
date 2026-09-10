@@ -9,9 +9,8 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { deleteObject, ref } from 'firebase/storage';
 import { asNumber, asString, toDate } from '@/lib/firestore';
-import { getFirebaseDb, getFirebaseStorage } from '@/services/firebase';
+import { getFirebaseDb } from '@/services/firebase';
 import type { Evidence } from '@/types';
 
 function mapEvidence(id: string, data: Record<string, unknown>): Evidence {
@@ -127,9 +126,6 @@ export async function reorderEvidences(orderedIds: string[]): Promise<void> {
 }
 
 export async function deleteEvidence(evidence: Evidence): Promise<void> {
-  if (evidence.storagePath) {
-    await deleteObject(ref(getFirebaseStorage(), evidence.storagePath));
-  }
   await deleteDoc(doc(getFirebaseDb(), 'evidences', evidence.id));
 }
 

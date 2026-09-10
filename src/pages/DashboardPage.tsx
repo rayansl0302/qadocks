@@ -10,6 +10,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { ISSUE_TYPE_ICON } from '@/lib/constants';
 import { getErrorMessage } from '@/lib/errors';
 import { listCyclesByUser } from '@/services/cycleService';
+import { seedExampleData } from '@/services/exampleDataService';
 import { listIssuesByUser } from '@/services/issueService';
 import { listProjects } from '@/services/projectService';
 import { listReports } from '@/services/reportService';
@@ -30,9 +31,11 @@ export function DashboardPage() {
     }
 
     const userId = user.id;
+    const userName = user.displayName;
 
     async function load() {
       try {
+        const created = await seedExampleData(userId, userName);
         const [projectList, cycleList, issueList, reportList] = await Promise.all([
           listProjects(userId),
           listCyclesByUser(userId),
@@ -43,6 +46,9 @@ export function DashboardPage() {
         setCycles(cycleList);
         setIssues(issueList);
         setReports(reportList);
+        if (created) {
+          showToast('Exemplo Portal Administrativo criado na sua conta.');
+        }
       } catch (error) {
         showToast(getErrorMessage(error), 'error');
       } finally {

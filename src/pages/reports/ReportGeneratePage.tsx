@@ -51,6 +51,7 @@ export function ReportGeneratePage() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [fileName, setFileName] = useState('');
 
   useEffect(() => {
@@ -124,6 +125,7 @@ export function ReportGeneratePage() {
         }),
       );
       const generatedAt = new Date();
+      const name = buildReportFileName(project.name, cycle.name, generatedAt);
       const blob = await pdf(
         <QaReportDocument
           project={project}
@@ -136,13 +138,15 @@ export function ReportGeneratePage() {
           qaOwner={user.displayName}
         />,
       ).toBlob();
-      const name = buildReportFileName(project.name, cycle.name, generatedAt);
-      const url = URL.createObjectURL(blob);
+      const file = new File([blob], name, { type: 'application/pdf' });
+      const url = URL.createObjectURL(file);
       if (pdfUrl) {
         URL.revokeObjectURL(pdfUrl);
       }
+      setPdfBlob(file);
       setPdfUrl(url);
       setFileName(name);
+      downloadNamedPdf(file, name);
       await createReportRecord({
         userId: user.id,
         projectId: project.id,
@@ -184,9 +188,16 @@ export function ReportGeneratePage() {
               <a href={pdfUrl} target="_blank" rel="noreferrer">
                 <Button>Visualizar PDF</Button>
               </a>
-              <a href={pdfUrl} download={fileName}>
-                <Button variant="secondary">Baixar</Button>
-              </a>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  if (pdfBlob) {
+                    downloadNamedPdf(pdfBlob, fileName);
+                  }
+                }}
+              >
+                Baixar
+              </Button>
               <Button variant="ghost" onClick={() => setPdfUrl(null)}>
                 Gerar novamente
               </Button>
@@ -274,6 +285,17 @@ export function ReportGeneratePage() {
       ) : null}
     </div>
   );
+}
+
+function downloadNamedPdf(blob: Blob, name: string) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 function Checkbox({
