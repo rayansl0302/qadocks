@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { AccountCreatorRoute } from '@/components/layout/AccountCreatorRoute';
 import { GuestRoute } from '@/components/layout/GuestRoute';
 import { ProtectedRoute } from '@/components/layout/ProtectedRoute';
 import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage';
@@ -25,11 +26,13 @@ export function App() {
     <Routes>
       <Route element={<GuestRoute />}>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/cadastro" element={<RegisterPage />} />
         <Route path="/recuperar-senha" element={<ForgotPasswordPage />} />
       </Route>
 
       <Route element={<ProtectedRoute />}>
+        <Route element={<AccountCreatorRoute />}>
+          <Route path="/interno-qa/criar-usuario" element={<RegisterPage />} />
+        </Route>
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/projects" element={<ProjectsPage />} />

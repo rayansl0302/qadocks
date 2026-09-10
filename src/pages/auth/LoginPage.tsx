@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { AuthShell } from '@/components/layout/AuthShell';
 import { Button } from '@/components/ui/Button';
@@ -117,11 +117,6 @@ export function LoginPage() {
           {recovering ? 'Enviando...' : 'Recuperar senha'}
         </Button>
       </form>
-      <div className="mt-6 flex flex-col gap-2 text-sm text-muted">
-        <Link to="/cadastro" className="hover:text-ink">
-          Criar conta
-        </Link>
-      </div>
     </AuthShell>
   );
 }

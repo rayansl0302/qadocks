@@ -1,6 +1,8 @@
+import { deleteApp, getApps, initializeApp } from 'firebase/app';
 import {
   EmailAuthProvider,
   createUserWithEmailAndPassword,
+  getAuth,
   reauthenticateWithCredential,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -11,7 +13,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { asString, toDate } from '@/lib/firestore';
-import { getFirebaseAuth, getFirebaseDb } from '@/services/firebase';
+import { getFirebaseAuth, getFirebaseConfig, getFirebaseDb } from '@/services/firebase';
 import type { AppUser } from '@/types';
 
 export async function registerUser(name: string, email: string, password: string): Promise<AppUser> {
@@ -19,6 +21,27 @@ export async function registerUser(name: string, email: string, password: string
   const credential = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(credential.user, { displayName: name });
   return persistUser(credential.user, name);
+}
+
+export function canManageAccounts(user: AppUser): boolean {
+  const email = user.email.trim().toLowerCase();
+  const name = user.displayName.trim().toLowerCase();
+  const localPart = email.split('@')[0] ?? '';
+  return localPart === 'rayan' || localPart.startsWith('rayan.') || name === 'rayan' || name.startsWith('rayan ');
+}
+
+export async function registerManagedUser(name: string, email: string, password: string): Promise<void> {
+  const appName = 'account-creator';
+  const existing = getApps().find((item) => item.name === appName);
+  const secondary = existing ?? initializeApp(getFirebaseConfig(), appName);
+  const secondaryAuth = getAuth(secondary);
+  try {
+    const credential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+    await updateProfile(credential.user, { displayName: name });
+    await signOut(secondaryAuth);
+  } finally {
+    await deleteApp(secondary);
+  }
 }
 
 export async function loginUser(email: string, password: string): Promise<User> {

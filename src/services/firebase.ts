@@ -11,6 +11,10 @@ const firebaseConfig = {
   appId: import.meta.env.FIREBASE_APP_ID,
 };
 
+export function getFirebaseConfig() {
+  return firebaseConfig;
+}
+
 export function isFirebaseConfigured(): boolean {
   return Boolean(
     firebaseConfig.apiKey &&
