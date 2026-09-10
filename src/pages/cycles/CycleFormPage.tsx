@@ -135,25 +135,57 @@ export function CycleFormPage() {
         title={isEditing ? 'Editar ciclo' : 'Novo ciclo de teste'}
         description="Defina o período, a versão e o ambiente deste ciclo."
       />
-      <Card className="max-w-3xl">
+      <Card className="max-w-5xl">
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <Input label="Nome" error={errors.name?.message} {...register('name')} />
-          <Textarea label="Descrição" {...register('description')} />
-          <div className="grid gap-4 md:grid-cols-2">
-            <Input label="Versão" {...register('version')} />
-            <Input label="Ambiente" {...register('environment')} />
-            <Input label="Data inicial" type="date" {...register('startDate')} />
-            <Input label="Data final" type="date" {...register('endDate')} />
-            <Input label="Responsável pelo QA" readOnly className="bg-paper text-muted" {...register('owner')} />
-            <Select
-              label="Status"
-              options={CYCLE_STATUSES.map((status) => ({
-                value: status,
-                label: CYCLE_STATUS_LABEL[status as CycleStatus],
-              }))}
-              {...register('status')}
-            />
-          </div>
+          <Input
+            label="Nome"
+            error={errors.name?.message}
+            hint="É o nome desta rodada de testes. Serve para identificar o ciclo na lista do projeto e no PDF."
+            {...register('name')}
+          />
+          <Textarea
+            label="Descrição"
+            hint="Explica o objetivo desta rodada. Serve para contextualizar o que será testado neste ciclo."
+            {...register('description')}
+          />
+          <Input
+            label="Versão"
+            hint="É a versão do sistema nesta rodada. Serve para saber em qual build o teste foi feito."
+            {...register('version')}
+          />
+          <Input
+            label="Ambiente"
+            hint="É o ambiente onde o teste acontece, como homologação ou produção. Serve para registrar onde o ciclo foi executado."
+            {...register('environment')}
+          />
+          <Input
+            label="Data inicial"
+            type="date"
+            hint="É o dia em que o ciclo começa. Serve para marcar o período de testes no relatório."
+            {...register('startDate')}
+          />
+          <Input
+            label="Data final"
+            type="date"
+            hint="É o dia em que o ciclo termina. Serve para delimitar o período desta rodada."
+            {...register('endDate')}
+          />
+          <Input
+            label="Responsável pelo QA"
+            readOnly
+            className="bg-paper text-muted"
+            hint="É o seu nome de perfil. Serve para identificar quem conduziu os testes no projeto, no ciclo e no PDF."
+            {...register('owner')}
+          />
+          <Select
+            label="Status"
+            hint="É a situação do ciclo: ativo, concluído ou arquivado. Serve para acompanhar se esta rodada ainda está em andamento."
+            options={CYCLE_STATUSES.map((status) => ({
+              value: status,
+              label: CYCLE_STATUS_LABEL[status as CycleStatus],
+            }))}
+            {...register('status')}
+          />
           <div className="flex justify-end gap-2">
             <Link to={cycleId ? `/cycles/${cycleId}` : `/projects/${resolvedProjectId}`}>
               <Button variant="secondary">Cancelar</Button>

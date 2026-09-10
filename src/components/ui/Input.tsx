@@ -1,16 +1,17 @@
 import type { InputHTMLAttributes } from 'react';
+import { FieldLayout } from '@/components/ui/FieldLayout';
 import { cn } from '@/lib/cn';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
+  hint?: string;
 }
 
-export function Input({ label, error, id, className, ...props }: InputProps) {
+export function Input({ label, error, hint, id, className, ...props }: InputProps) {
   const inputId = id ?? props.name;
   return (
-    <label className="flex flex-col gap-1.5 text-sm" htmlFor={inputId}>
-      <span className="font-medium text-ink">{label}</span>
+    <FieldLayout label={label} htmlFor={inputId} error={error} hint={hint}>
       <input
         id={inputId}
         className={cn(
@@ -20,7 +21,6 @@ export function Input({ label, error, id, className, ...props }: InputProps) {
         )}
         {...props}
       />
-      {error ? <span className="text-xs text-danger">{error}</span> : null}
-    </label>
+    </FieldLayout>
   );
 }

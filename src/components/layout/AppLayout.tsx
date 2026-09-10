@@ -1,5 +1,6 @@
-import { BookOpen, FileText, FolderKanban, LayoutDashboard, LogOut } from 'lucide-react';
+import { BookOpen, FileText, FolderKanban, LayoutDashboard, LogOut, UserRound } from 'lucide-react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { AppBreadcrumbs } from '@/components/layout/AppBreadcrumbs';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
@@ -11,6 +12,7 @@ const links = [
   { to: '/projects', label: 'Projetos', icon: FolderKanban },
   { to: '/reports', label: 'Relatórios', icon: FileText },
   { to: '/base-conhecimento', label: 'Base de conhecimento', icon: BookOpen },
+  { to: '/perfil', label: 'Perfil', icon: UserRound },
 ];
 
 export function AppLayout() {
@@ -73,6 +75,7 @@ export function AppLayout() {
           </Button>
         </header>
         <main className="px-4 py-6 md:px-8">
+          <AppBreadcrumbs />
           <Outlet />
         </main>
       </div>

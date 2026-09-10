@@ -8,6 +8,7 @@ interface AuthContextValue {
   user: AppUser | null;
   loading: boolean;
   configured: boolean;
+  setUser: (user: AppUser | null) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -47,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return unsubscribe;
   }, [configured]);
 
-  const value = useMemo(() => ({ user, loading, configured }), [user, loading, configured]);
+  const value = useMemo(() => ({ user, loading, configured, setUser }), [user, loading, configured]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

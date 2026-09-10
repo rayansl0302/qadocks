@@ -41,13 +41,26 @@ export function RegisterPage() {
   return (
     <AuthShell title="Criar conta" subtitle="Comece a documentar testes em poucos minutos.">
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-        <Input label="Nome" error={errors.name?.message} {...register('name')} />
-        <Input label="E-mail" type="email" autoComplete="email" error={errors.email?.message} {...register('email')} />
+        <Input
+          label="Nome"
+          error={errors.name?.message}
+          hint="É o seu nome de QA. Serve para aparecer como Responsável pelo QA nos projetos e no PDF."
+          {...register('name')}
+        />
+        <Input
+          label="E-mail"
+          type="email"
+          autoComplete="email"
+          error={errors.email?.message}
+          hint="É o e-mail da nova conta. Serve para login e recuperação de senha."
+          {...register('email')}
+        />
         <Input
           label="Senha"
           type="password"
           autoComplete="new-password"
           error={errors.password?.message}
+          hint="É a senha de acesso. Deve ter pelo menos 6 caracteres."
           {...register('password')}
         />
         <Button type="submit" disabled={isSubmitting || !configured}>

@@ -119,18 +119,44 @@ export function ProjectFormPage() {
         title={isEditing ? 'Editar projeto' : 'Novo projeto'}
         description="Informe os dados principais do sistema que será testado."
       />
-      <Card className="max-w-3xl">
+      <Card className="max-w-5xl">
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <Input label="Nome" error={errors.name?.message} {...register('name')} />
-          <Textarea label="Descrição" {...register('description')} />
-          <div className="grid gap-4 md:grid-cols-2">
-            <Input label="Cliente" {...register('client')} />
-            <Input label="Versão" {...register('version')} />
-            <Input label="Ambiente principal" {...register('environment')} />
-            <Input label="Responsável pelo QA" readOnly className="bg-paper text-muted" {...register('owner')} />
-          </div>
+          <Input
+            label="Nome"
+            error={errors.name?.message}
+            hint="É o nome do sistema que será testado. Serve para identificar o projeto na lista e no relatório."
+            {...register('name')}
+          />
+          <Textarea
+            label="Descrição"
+            hint="É um resumo do que o sistema faz. Serve para contextualizar o escopo dos testes."
+            {...register('description')}
+          />
+          <Input
+            label="Cliente"
+            hint="É para quem o sistema pertence ou será entregue. Serve para identificar o destinatário do projeto."
+            {...register('client')}
+          />
+          <Input
+            label="Versão"
+            hint="É a versão atual do sistema neste projeto. Serve como referência padrão para os ciclos."
+            {...register('version')}
+          />
+          <Input
+            label="Ambiente principal"
+            hint="É o ambiente padrão dos testes, como homologação. Serve de base quando um ciclo não informar outro."
+            {...register('environment')}
+          />
+          <Input
+            label="Responsável pelo QA"
+            readOnly
+            className="bg-paper text-muted"
+            hint="É o seu nome de perfil. Serve para identificar quem é o QA responsável por este projeto."
+            {...register('owner')}
+          />
           <Select
             label="Status"
+            hint="É a situação do projeto: ativo, concluído ou arquivado. Serve para organizar o que ainda está em teste."
             options={PROJECT_STATUSES.map((status) => ({
               value: status,
               label: PROJECT_STATUS_LABEL[status as ProjectStatus],

@@ -31,6 +31,33 @@ export async function recoverPassword(email: string): Promise<void> {
   await sendPasswordResetEmail(getFirebaseAuth(), email);
 }
 
+export async function updateUserProfile(displayName: string): Promise<AppUser> {
+  const auth = getFirebaseAuth();
+  const current = auth.currentUser;
+  if (!current) {
+    throw new Error('Usuário não autenticado.');
+  }
+  await updateProfile(current, { displayName });
+  try {
+    await setDoc(
+      doc(getFirebaseDb(), 'users', current.uid),
+      {
+        displayName,
+        email: current.email ?? '',
+      },
+      { merge: true },
+    );
+  } catch {
+    return {
+      id: current.uid,
+      displayName,
+      email: current.email ?? '',
+      createdAt: new Date(),
+    };
+  }
+  return getAppUser(current);
+}
+
 export async function getAppUser(user: User): Promise<AppUser> {
   const fallback: AppUser = {
     id: user.uid,

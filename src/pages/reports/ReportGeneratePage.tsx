@@ -224,45 +224,53 @@ export function ReportGeneratePage() {
           </Link>
         }
       />
-      <Card className="grid max-w-3xl gap-4">
+      <Card className="grid max-w-5xl gap-4">
         <Input
           label="Título do relatório"
+          hint="É o nome que aparece na capa do PDF. Serve para identificar este relatório."
           value={config.title}
           onChange={(event) => setConfig((current) => ({ ...current, title: event.target.value }))}
         />
         <Select
           label="Modelo"
+          hint="É o formato visual do PDF: profissional, compacto ou executivo. Serve para escolher o nível de detalhe do relatório."
           value={config.template}
           onChange={(event) => setConfig((current) => ({ ...current, template: event.target.value as ReportTemplate }))}
           options={Object.entries(REPORT_TEMPLATE_LABEL).map(([value, label]) => ({ value, label }))}
         />
         <Checkbox
           label="Incluir capa"
+          hint="É a primeira página com projeto, ciclo e responsável. Serve para apresentar o relatório."
           checked={config.includeCover}
           onChange={(checked) => setConfig((current) => ({ ...current, includeCover: checked }))}
         />
         <Checkbox
           label="Incluir resumo"
+          hint="É o resumo executivo com totais. Serve para um gestor entender o resultado sem ler cada ocorrência."
           checked={config.includeSummary}
           onChange={(checked) => setConfig((current) => ({ ...current, includeSummary: checked }))}
         />
         <Checkbox
           label="Incluir gráficos"
+          hint="São as barras por tipo e severidade. Servem para visualizar a distribuição das ocorrências."
           checked={config.includeCharts}
           onChange={(checked) => setConfig((current) => ({ ...current, includeCharts: checked }))}
         />
         <Checkbox
           label="Incluir evidências"
+          hint="São os prints das ocorrências. Servem para comprovar no PDF o que foi encontrado."
           checked={config.includeEvidences}
           onChange={(checked) => setConfig((current) => ({ ...current, includeEvidences: checked }))}
         />
         <Checkbox
           label="Incluir conclusão"
+          hint="É o fechamento do relatório. Serve para registrar o parecer final do ciclo."
           checked={config.includeConclusion}
           onChange={(checked) => setConfig((current) => ({ ...current, includeConclusion: checked }))}
         />
         <Textarea
           label="Conclusão"
+          hint="É o texto final do relatório. Serve para descrever o resultado do ciclo e o que ainda está pendente."
           value={config.conclusion}
           onChange={(event) => setConfig((current) => ({ ...current, conclusion: event.target.value }))}
         />
@@ -300,22 +308,27 @@ function downloadNamedPdf(blob: Blob, name: string) {
 
 function Checkbox({
   label,
+  hint,
   checked,
   onChange,
 }: {
   label: string;
+  hint?: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <label className="flex items-center gap-3 text-sm">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(event) => onChange(event.target.checked)}
-        className="h-4 w-4 accent-teal"
-      />
-      {label}
-    </label>
+    <div className={hint ? 'grid gap-2 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start lg:gap-5' : undefined}>
+      <label className="flex items-center gap-3 text-sm">
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(event) => onChange(event.target.checked)}
+          className="h-4 w-4 accent-teal"
+        />
+        {label}
+      </label>
+      {hint ? <p className="rounded-xl bg-paper px-3 py-2 text-xs leading-5 text-muted">{hint}</p> : null}
+    </div>
   );
 }

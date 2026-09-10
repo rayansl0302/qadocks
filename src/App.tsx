@@ -7,6 +7,7 @@ import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { CycleFormPage } from '@/pages/cycles/CycleFormPage';
 import { CycleDetailPage } from '@/pages/cycles/CycleDetailPage';
+import { CycleFollowUpPage } from '@/pages/cycles/CycleFollowUpPage';
 import { ProjectCyclesPage } from '@/pages/cycles/ProjectCyclesPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { IssueDetailPage } from '@/pages/issues/IssueDetailPage';
@@ -16,6 +17,7 @@ import { ProjectFormPage } from '@/pages/projects/ProjectFormPage';
 import { ProjectsPage } from '@/pages/projects/ProjectsPage';
 import { ReportGeneratePage } from '@/pages/reports/ReportGeneratePage';
 import { KnowledgeBasePage } from '@/pages/KnowledgeBasePage';
+import { ProfilePage } from '@/pages/ProfilePage';
 import { ReportsPage } from '@/pages/reports/ReportsPage';
 
 export function App() {
@@ -41,11 +43,13 @@ export function App() {
           <Route path="/cycles/:cycleId/issues" element={<CycleDetailPage />} />
           <Route path="/cycles/:cycleId/issues/new" element={<IssueFormPage />} />
           <Route path="/cycles/:cycleId/relatorio" element={<ReportGeneratePage />} />
+          <Route path="/cycles/:cycleId/acompanhamento" element={<CycleFollowUpPage />} />
           <Route path="/issues/:issueId" element={<IssueDetailPage />} />
           <Route path="/issues/:issueId/edit" element={<IssueFormPage />} />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/reports/:reportId" element={<ReportsPage />} />
           <Route path="/base-conhecimento" element={<KnowledgeBasePage />} />
+          <Route path="/perfil" element={<ProfilePage />} />
         </Route>
       </Route>
 

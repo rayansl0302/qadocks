@@ -40,7 +40,14 @@ export function ForgotPasswordPage() {
   return (
     <AuthShell title="Recuperar senha" subtitle="Informe o e-mail da sua conta para receber o link de redefinição.">
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-        <Input label="E-mail" type="email" autoComplete="email" error={errors.email?.message} {...register('email')} />
+        <Input
+          label="E-mail"
+          type="email"
+          autoComplete="email"
+          error={errors.email?.message}
+          hint="É o e-mail da conta. Serve para enviar o link de redefinição de senha."
+          {...register('email')}
+        />
         <Button type="submit" disabled={isSubmitting || !configured}>
           {isSubmitting ? 'Enviando...' : 'Enviar link'}
         </Button>

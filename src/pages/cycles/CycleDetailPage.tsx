@@ -121,6 +121,9 @@ export function CycleDetailPage() {
             <Link to={`/cycles/${cycle.id}/relatorio`}>
               <Button variant="secondary">Gerar relatório PDF</Button>
             </Link>
+            <Link to={`/cycles/${cycle.id}/acompanhamento`}>
+              <Button variant="secondary">Acompanhamento</Button>
+            </Link>
             <Button variant="danger" onClick={() => setConfirmDelete(true)}>
               Excluir
             </Button>
