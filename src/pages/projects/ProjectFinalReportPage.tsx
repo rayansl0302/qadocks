@@ -105,7 +105,28 @@ export function ProjectFinalReportPage() {
     try {
       const generatedAt = new Date();
       const shownName = displayName.trim() || project.name;
-      const rename = (value: string) => (shownName === project.name ? value : value.split(project.name).join(shownName));
+      const cycleAliases = publicMode
+        ? data.cycles
+            .map((item, index) => ({ from: item.cycle.name, to: `Ciclo ${String(index + 1).padStart(2, '0')}` }))
+            .filter((alias) => alias.from.trim())
+            .sort((left, right) => right.from.length - left.from.length)
+        : [];
+      const rename = (value: string) => {
+        let result = shownName === project.name ? value : value.split(project.name).join(shownName);
+        cycleAliases.forEach((alias) => {
+          result = result.split(alias.from).join(alias.to);
+        });
+        return result;
+      };
+      const documentData = publicMode
+        ? {
+            ...data,
+            cycles: data.cycles.map((item, index) => ({
+              ...item,
+              cycle: { ...item.cycle, name: `Ciclo ${String(index + 1).padStart(2, '0')}`, description: '' },
+            })),
+          }
+        : data;
       const name = buildReportFileName(publicMode ? shownName : project.name, 'Consideracoes finais', generatedAt);
       const documentProject: Project = publicMode
         ? { ...project, name: shownName, client: '', description: '' }
@@ -119,7 +140,7 @@ export function ProjectFinalReportPage() {
       const blob = await pdf(
         <FinalReportDocument
           project={documentProject}
-          data={data}
+          data={documentData}
           texts={documentTexts}
           title={rename(title)}
           generatedAt={generatedAt}
@@ -258,7 +279,8 @@ export function ProjectFinalReportPage() {
                 <strong>Versão pública (anonimizada)</strong>
                 <span className="block text-xs leading-5 text-muted">
                   Para publicar, por exemplo, no LinkedIn: oculta o nome do cliente e a descrição do projeto, permite
-                  trocar o nome do projeto e remove os títulos das ocorrências. Ficam apenas números e gráficos.
+                  trocar o nome do projeto, renomeia os ciclos para Ciclo 01, 02... e remove os títulos das
+                  ocorrências. Ficam apenas números e gráficos. Seu nome continua como autor e na assinatura.
                 </span>
               </span>
             </label>
