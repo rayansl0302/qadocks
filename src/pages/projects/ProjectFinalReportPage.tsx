@@ -123,13 +123,26 @@ export function ProjectFinalReportPage() {
             ...data,
             cycles: data.cycles.map((item, index) => ({
               ...item,
-              cycle: { ...item.cycle, name: `Ciclo ${String(index + 1).padStart(2, '0')}`, description: '' },
+              cycle: {
+                id: item.cycle.id,
+                projectId: item.cycle.projectId,
+                name: `Ciclo ${String(index + 1).padStart(2, '0')}`,
+                description: '',
+                version: '',
+                environment: '',
+                startDate: item.cycle.startDate,
+                endDate: item.cycle.endDate,
+                owner: '',
+                status: item.cycle.status,
+                createdAt: item.cycle.createdAt,
+                createdBy: '',
+              },
             })),
           }
         : data;
       const name = buildReportFileName(publicMode ? shownName : project.name, 'Consideracoes finais', generatedAt);
       const documentProject: Project = publicMode
-        ? { ...project, name: shownName, client: '', description: '' }
+        ? { ...project, name: shownName, client: '', description: '', version: '', environment: '', owner: '' }
         : project;
       const documentTexts: FinalReportTexts = {
         summary: rename(texts.summary),
@@ -280,7 +293,7 @@ export function ProjectFinalReportPage() {
                 <span className="block text-xs leading-5 text-muted">
                   Para publicar, por exemplo, no LinkedIn: oculta o nome do cliente e a descrição do projeto, permite
                   trocar o nome do projeto, renomeia os ciclos para Ciclo 01, 02... e remove os títulos das
-                  ocorrências. Ficam apenas números e gráficos. Seu nome continua como autor e na assinatura.
+                  ocorrências. Versão e ambiente também saem. Ficam apenas números e gráficos. Seu nome continua como autor e na assinatura.
                 </span>
               </span>
             </label>

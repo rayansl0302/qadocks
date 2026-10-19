@@ -181,10 +181,12 @@ export function FinalReportDocument({
                   <Meta label="Ciclos de teste" value={String(data.cycles.length)} />
                 )}
               </View>
-              <View style={styles.metaRow}>
-                <Meta label="Versão" value={project.version || '—'} />
-                <Meta label="Ambiente" value={project.environment || '—'} />
-              </View>
+              {project.version || project.environment ? (
+                <View style={styles.metaRow}>
+                  <Meta label="Versão" value={project.version || '—'} />
+                  <Meta label="Ambiente" value={project.environment || '—'} />
+                </View>
+              ) : null}
               <View style={[styles.metaRow, { marginBottom: 0 }]}>
                 <Meta label="Período dos testes" value={period} />
                 <Meta label="Responsável pelo QA" value={qaOwner || '—'} />
