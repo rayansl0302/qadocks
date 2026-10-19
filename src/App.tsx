@@ -14,6 +14,7 @@ import { DashboardPage } from '@/pages/DashboardPage';
 import { IssueDetailPage } from '@/pages/issues/IssueDetailPage';
 import { IssueFormPage } from '@/pages/issues/IssueFormPage';
 import { ProjectDetailPage } from '@/pages/projects/ProjectDetailPage';
+import { ProjectFinalReportPage } from '@/pages/projects/ProjectFinalReportPage';
 import { ProjectFormPage } from '@/pages/projects/ProjectFormPage';
 import { ProjectsPage } from '@/pages/projects/ProjectsPage';
 import { ReportGeneratePage } from '@/pages/reports/ReportGeneratePage';
@@ -45,6 +46,7 @@ export function App() {
           <Route path="/projects/new" element={<ProjectFormPage />} />
           <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
           <Route path="/projects/:projectId/edit" element={<ProjectFormPage />} />
+          <Route path="/projects/:projectId/consideracoes-finais" element={<ProjectFinalReportPage />} />
           <Route path="/projects/:projectId/casos" element={<TestCaseListPage />} />
           <Route path="/projects/:projectId/casos/new" element={<TestCaseFormPage />} />
           <Route path="/projects/:projectId/casos/:caseId" element={<TestCaseDetailPage />} />

@@ -25,6 +25,8 @@ export interface AppUser {
   id: string;
   displayName: string;
   email: string;
+  /** PNG (data URL) da assinatura desenhada no perfil. */
+  signature?: string;
   createdAt: Date;
 }
 

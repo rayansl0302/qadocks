@@ -1,15 +1,22 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
+import { SignaturePad, type SignaturePadHandle } from '@/components/ui/SignaturePad';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
 import { getErrorMessage } from '@/lib/errors';
-import { canManageAccounts, changePassword, registerManagedUser, updateUserProfile } from '@/services/authService';
+import {
+  canManageAccounts,
+  changePassword,
+  registerManagedUser,
+  updateUserProfile,
+  updateUserSignature,
+} from '@/services/authService';
 
 const schema = z.object({
   displayName: z.string().min(2, 'Informe o nome que deve aparecer no relatório.'),
@@ -35,13 +42,15 @@ const accountSchema = z.object({
 type FormValues = z.infer<typeof schema>;
 type PasswordFormValues = z.infer<typeof passwordSchema>;
 type AccountFormValues = z.infer<typeof accountSchema>;
-type ProfileTab = 'dados' | 'senha' | 'conta';
+type ProfileTab = 'dados' | 'assinatura' | 'senha' | 'conta';
 
 export function ProfilePage() {
   const { user, setUser } = useAuth();
   const { showToast } = useToast();
   const canCreateAccounts = Boolean(user && canManageAccounts(user));
   const [tab, setTab] = useState<ProfileTab>('dados');
+  const padRef = useRef<SignaturePadHandle>(null);
+  const [savingSignature, setSavingSignature] = useState(false);
   const {
     register,
     handleSubmit,
@@ -91,6 +100,28 @@ export function ProfilePage() {
     }
   }
 
+  async function saveSignature(signature: string) {
+    setSavingSignature(true);
+    try {
+      setUser(await updateUserSignature(signature));
+      padRef.current?.clear();
+      showToast(signature ? 'Assinatura salva. Ela será usada nas considerações finais.' : 'Assinatura removida.');
+    } catch (error) {
+      showToast(getErrorMessage(error), 'error');
+    } finally {
+      setSavingSignature(false);
+    }
+  }
+
+  function handleSaveSignature() {
+    const signature = padRef.current?.toDataUrl() ?? '';
+    if (!signature) {
+      showToast('Desenhe a assinatura antes de salvar.', 'error');
+      return;
+    }
+    void saveSignature(signature);
+  }
+
   async function onCreateAccount(values: AccountFormValues) {
     try {
       await registerManagedUser(values.name, values.email, values.password);
@@ -120,6 +151,9 @@ export function ProfilePage() {
       <div className="mb-4 flex flex-wrap gap-2">
         <TabButton active={tab === 'dados'} onClick={() => setTab('dados')}>
           Dados
+        </TabButton>
+        <TabButton active={tab === 'assinatura'} onClick={() => setTab('assinatura')}>
+          Assinatura
         </TabButton>
         <TabButton active={tab === 'senha'} onClick={() => setTab('senha')}>
           Senha
@@ -154,6 +188,37 @@ export function ProfilePage() {
           </div>
         </form>
       </Card>
+      ) : null}
+
+      {tab === 'assinatura' ? (
+        <Card className="max-w-5xl">
+          <h2 className="mb-1 font-display text-2xl">Assinatura</h2>
+          <p className="mb-4 text-sm text-muted">
+            Desenhe sua assinatura uma vez. Ela é usada automaticamente no documento de considerações finais.
+          </p>
+          {user?.signature ? (
+            <div className="mb-4">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted">Assinatura atual</p>
+              <div className="inline-block rounded-xl border border-line bg-white p-4">
+                <img src={user.signature} alt="Assinatura atual" className="max-h-24" />
+              </div>
+            </div>
+          ) : null}
+          <SignaturePad handleRef={padRef} />
+          <div className="mt-4 flex flex-wrap justify-end gap-2">
+            {user?.signature ? (
+              <Button variant="ghost" disabled={savingSignature} onClick={() => void saveSignature('')}>
+                Remover assinatura
+              </Button>
+            ) : null}
+            <Button variant="secondary" onClick={() => padRef.current?.clear()} disabled={savingSignature}>
+              Limpar
+            </Button>
+            <Button onClick={handleSaveSignature} disabled={savingSignature}>
+              {savingSignature ? 'Salvando...' : 'Salvar assinatura'}
+            </Button>
+          </div>
+        </Card>
       ) : null}
 
       {tab === 'senha' ? (

@@ -48,6 +48,9 @@ export function buildBreadcrumbs(input: BreadcrumbInput): BreadcrumbItem[] {
   if (matchPath({ path: '/projects/:projectId/edit', end: true }, input.pathname)) {
     return [home, projects, project, { label: 'Editar' }];
   }
+  if (matchPath({ path: '/projects/:projectId/consideracoes-finais', end: true }, input.pathname)) {
+    return [home, projects, project, { label: 'Considerações finais' }];
+  }
   if (matchPath({ path: '/projects/:projectId/casos/new', end: true }, input.pathname)) {
     return [home, casos, { label: 'Novo caso' }];
   }

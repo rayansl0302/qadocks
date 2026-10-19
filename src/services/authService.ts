@@ -95,6 +95,20 @@ export async function updateUserProfile(displayName: string): Promise<AppUser> {
   return getAppUser(current);
 }
 
+/** Salva a assinatura (PNG data URL) no perfil. String vazia remove a assinatura. */
+export async function updateUserSignature(signature: string): Promise<AppUser> {
+  const current = getFirebaseAuth().currentUser;
+  if (!current) {
+    throw new Error('Usuário não autenticado.');
+  }
+  await setDoc(
+    doc(getFirebaseDb(), 'users', current.uid),
+    { signature, email: current.email ?? '', displayName: current.displayName ?? 'QA' },
+    { merge: true },
+  );
+  return getAppUser(current);
+}
+
 export async function getAppUser(user: User): Promise<AppUser> {
   const fallback: AppUser = {
     id: user.uid,
@@ -111,6 +125,7 @@ export async function getAppUser(user: User): Promise<AppUser> {
         id: snapshot.id,
         displayName: asString(data.displayName, user.displayName ?? 'QA'),
         email: asString(data.email, user.email ?? ''),
+        signature: asString(data.signature),
         createdAt: toDate(data.createdAt),
       };
     }

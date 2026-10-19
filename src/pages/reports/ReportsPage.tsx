@@ -66,7 +66,14 @@ export function ReportsPage() {
                 </div>
                 <div className="flex items-center gap-3 text-sm">
                   <span>{formatDateTime(report.createdAt)}</span>
-                  <Link to={`/cycles/${report.cycleId}/relatorio`} className="font-semibold text-teal">
+                  <Link
+                    to={
+                      report.cycleId
+                        ? `/cycles/${report.cycleId}/relatorio`
+                        : `/projects/${report.projectId}/consideracoes-finais`
+                    }
+                    className="font-semibold text-teal"
+                  >
                     Gerar novamente
                   </Link>
                 </div>

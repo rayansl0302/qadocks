@@ -93,6 +93,9 @@ export function ProjectDetailPage() {
             <Link to={`/projects/${project.id}/edit`}>
               <Button variant="secondary">Editar</Button>
             </Link>
+            <Link to={`/projects/${project.id}/consideracoes-finais`}>
+              <Button variant="secondary">Considerações finais</Button>
+            </Link>
             <Link to={`/projects/${project.id}/cycles/new`}>
               <Button>Novo ciclo</Button>
             </Link>
