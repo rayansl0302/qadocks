@@ -9,6 +9,7 @@ import {
   serverTimestamp,
   updateDoc,
   where,
+  writeBatch,
 } from 'firebase/firestore';
 import { nextIssueCode } from '@/lib/issueCode';
 import { asString, asStringArray, toDate } from '@/lib/firestore';
@@ -111,6 +112,20 @@ export async function updateIssue(issueId: string, input: Partial<IssueInput>): 
     ...input,
     updatedAt: serverTimestamp(),
   });
+}
+
+const BATCH_LIMIT = 400;
+
+/** Altera o status de várias ocorrências de uma vez (em lotes atômicos). */
+export async function updateIssuesStatus(issueIds: string[], status: IssueStatus): Promise<void> {
+  const db = getFirebaseDb();
+  for (let start = 0; start < issueIds.length; start += BATCH_LIMIT) {
+    const batch = writeBatch(db);
+    issueIds.slice(start, start + BATCH_LIMIT).forEach((issueId) => {
+      batch.update(doc(db, 'issues', issueId), { status, updatedAt: serverTimestamp() });
+    });
+    await batch.commit();
+  }
 }
 
 export async function deleteIssueById(issueId: string): Promise<void> {

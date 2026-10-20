@@ -24,7 +24,7 @@ import {
 import { getErrorMessage } from '@/lib/errors';
 import { filterIssues, sortIssues } from '@/lib/issueFilters';
 import { deleteCycleById, getCycle } from '@/services/cycleService';
-import { listIssuesByCycle } from '@/services/issueService';
+import { listIssuesByCycle, updateIssuesStatus } from '@/services/issueService';
 import { getProject } from '@/services/projectService';
 import type { Issue, IssueFilters, IssueSort, IssueStatus, IssueType, Priority, Project, Severity, TestCycle } from '@/types';
 
@@ -50,6 +50,10 @@ export function CycleDetailPage() {
   const [sort, setSort] = useState<IssueSort>('mais_recentes');
   const [loading, setLoading] = useState(true);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkStatus, setBulkStatus] = useState<IssueStatus>('aprovado');
+  const [confirmBulk, setConfirmBulk] = useState(false);
+  const [applyingBulk, setApplyingBulk] = useState(false);
 
   useEffect(() => {
     if (!cycleId) {
@@ -86,6 +90,44 @@ export function CycleDetailPage() {
   }, [cycleId, navigate, showToast]);
 
   const visibleIssues = useMemo(() => sortIssues(filterIssues(issues, filters), sort), [issues, filters, sort]);
+
+  const allVisibleSelected = visibleIssues.length > 0 && visibleIssues.every((issue) => selected.has(issue.id));
+
+  function toggleIssue(issueId: string) {
+    setSelected((current) => {
+      const next = new Set(current);
+      if (next.has(issueId)) {
+        next.delete(issueId);
+      } else {
+        next.add(issueId);
+      }
+      return next;
+    });
+  }
+
+  function toggleAllVisible() {
+    setSelected((current) => {
+      const next = new Set(current);
+      visibleIssues.forEach((issue) => (allVisibleSelected ? next.delete(issue.id) : next.add(issue.id)));
+      return next;
+    });
+  }
+
+  async function handleBulkApply() {
+    const ids = [...selected];
+    setApplyingBulk(true);
+    try {
+      await updateIssuesStatus(ids, bulkStatus);
+      setIssues((current) => current.map((issue) => (selected.has(issue.id) ? { ...issue, status: bulkStatus } : issue)));
+      setSelected(new Set());
+      showToast(`${ids.length} ocorrência(s) atualizada(s) para ${ISSUE_STATUS_LABEL[bulkStatus]}.`);
+    } catch (error) {
+      showToast(getErrorMessage(error), 'error');
+    } finally {
+      setApplyingBulk(false);
+      setConfirmBulk(false);
+    }
+  }
 
   async function handleDelete() {
     if (!cycle || !project) {
@@ -209,26 +251,81 @@ export function CycleDetailPage() {
         />
       ) : (
         <div className="grid gap-3">
+          <Card className="sticky top-2 z-10 flex flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between">
+            <label className="flex items-center gap-3 text-sm">
+              <input
+                type="checkbox"
+                checked={allVisibleSelected}
+                onChange={toggleAllVisible}
+                className="h-4 w-4 accent-teal"
+              />
+              Selecionar todas as visíveis ({visibleIssues.length})
+            </label>
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-muted">{selected.size} selecionada(s)</span>
+              <select
+                value={bulkStatus}
+                onChange={(event) => setBulkStatus(event.target.value as IssueStatus)}
+                className="rounded-xl border border-line bg-surface px-3 py-2 text-sm"
+                aria-label="Novo status"
+              >
+                {ISSUE_STATUSES.map((status) => (
+                  <option key={status} value={status}>
+                    {ISSUE_STATUS_LABEL[status]}
+                  </option>
+                ))}
+              </select>
+              <Button disabled={selected.size === 0 || applyingBulk} onClick={() => setConfirmBulk(true)}>
+                Aplicar status
+              </Button>
+              {selected.size > 0 ? (
+                <Button variant="ghost" onClick={() => setSelected(new Set())}>
+                  Limpar seleção
+                </Button>
+              ) : null}
+            </div>
+          </Card>
           {visibleIssues.map((issue) => (
-            <Link key={issue.id} to={`/issues/${issue.id}`}>
-              <Card className="transition hover:border-teal">
-                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">{issue.code}</p>
-                    <h3 className="mt-1 font-display text-2xl">{issue.title}</h3>
+            <div key={issue.id} className="flex items-stretch gap-3">
+              <label className="flex cursor-pointer items-center px-1" aria-label={`Selecionar ${issue.code}`}>
+                <input
+                  type="checkbox"
+                  checked={selected.has(issue.id)}
+                  onChange={() => toggleIssue(issue.id)}
+                  className="h-4 w-4 accent-teal"
+                />
+              </label>
+              <Link to={`/issues/${issue.id}`} className="min-w-0 flex-1">
+                <Card className="transition hover:border-teal">
+                  <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">{issue.code}</p>
+                      <h3 className="mt-1 font-display text-2xl">{issue.title}</h3>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <TypeBadge value={issue.type} />
+                      <SeverityBadge value={issue.severity} />
+                      <PriorityBadge value={issue.priority} />
+                      <StatusBadge value={issue.status} />
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    <TypeBadge value={issue.type} />
-                    <SeverityBadge value={issue.severity} />
-                    <PriorityBadge value={issue.priority} />
-                    <StatusBadge value={issue.status} />
-                  </div>
-                </div>
-              </Card>
-            </Link>
+                </Card>
+              </Link>
+            </div>
           ))}
         </div>
       )}
+
+      {confirmBulk ? (
+        <ConfirmDialog
+          title="Atualizar status em massa"
+          description={`Alterar o status de ${selected.size} ocorrência(s) para ${ISSUE_STATUS_LABEL[bulkStatus]}?`}
+          confirmLabel="Aplicar"
+          cancelLabel="Cancelar"
+          onCancel={() => setConfirmBulk(false)}
+          onConfirm={() => void handleBulkApply()}
+        />
+      ) : null}
 
       {confirmDelete ? (
         <ConfirmDialog
