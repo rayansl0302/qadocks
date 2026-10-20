@@ -30,7 +30,7 @@ const severityColor: Record<Severity, string> = {
 const styles = StyleSheet.create({
   page: {
     paddingTop: 64,
-    paddingBottom: 58,
+    paddingBottom: 40,
     paddingHorizontal: 44,
     fontFamily: 'Helvetica',
     fontSize: 10,
@@ -50,21 +50,6 @@ const styles = StyleSheet.create({
     backgroundColor: teal,
   },
   headerText: { fontSize: 8, color: surface, letterSpacing: 0.4 },
-  footer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 32,
-    paddingHorizontal: 44,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderTopWidth: 1,
-    borderTopColor: line,
-    backgroundColor: paper,
-  },
-  footerText: { fontSize: 8, color: muted },
   coverAccent: { position: 'absolute', top: 0, left: 0, bottom: 0, width: 14, backgroundColor: teal },
   cover: { flex: 1, justifyContent: 'space-between', paddingLeft: 16, paddingTop: 28, paddingBottom: 12 },
   kicker: { fontSize: 9, letterSpacing: 2.4, textTransform: 'uppercase', color: accent, marginBottom: 8 },
@@ -201,7 +186,6 @@ export function FinalReportDocument({
           </View>
           <Text style={styles.muted}>Emitido em {formatDate(generatedAt)}</Text>
         </View>
-        <Footer generatedAt={generatedAt} />
       </Page>
 
       <Page size="A4" style={styles.page}>
@@ -244,7 +228,6 @@ export function FinalReportDocument({
             />
           ))}
         </View>
-        <Footer generatedAt={generatedAt} />
       </Page>
 
       <Page size="A4" style={styles.page}>
@@ -297,7 +280,6 @@ export function FinalReportDocument({
             </View>
           ))}
         </View>
-        <Footer generatedAt={generatedAt} />
       </Page>
 
       <Page size="A4" style={styles.page}>
@@ -312,7 +294,6 @@ export function FinalReportDocument({
             showDescription={showCycleDescriptions}
           />
         ))}
-        <Footer generatedAt={generatedAt} />
       </Page>
 
       {hasPendingPage ? (
@@ -333,7 +314,6 @@ export function FinalReportDocument({
               </Text>
             </View>
           ))}
-          <Footer generatedAt={generatedAt} />
         </Page>
       ) : null}
 
@@ -358,7 +338,6 @@ export function FinalReportDocument({
             <Text style={styles.muted}>Responsável pelo QA · {formatDate(generatedAt)}</Text>
           </View>
         </View>
-        <Footer generatedAt={generatedAt} />
       </Page>
     </Document>
   );
@@ -369,15 +348,6 @@ function Header({ project }: { project: string }) {
     <View style={styles.header} fixed>
       <Text style={styles.headerText}>{project}</Text>
       <Text style={styles.headerText}>Considerações finais</Text>
-    </View>
-  );
-}
-
-function Footer({ generatedAt }: { generatedAt: Date }) {
-  return (
-    <View style={styles.footer} fixed>
-      <Text style={styles.footerText}>QA Report Generator · {formatDate(generatedAt)}</Text>
-      <Text style={styles.footerText} render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`} />
     </View>
   );
 }
