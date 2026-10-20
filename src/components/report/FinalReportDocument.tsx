@@ -504,16 +504,18 @@ function Donut({ percent }: { percent: number }) {
     <View style={{ width: size, height: size }}>
       <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
         <Circle cx={size / 2} cy={size / 2} r={radius} stroke={paper} strokeWidth={stroke} fill="none" />
-        <Circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke={green}
-          strokeWidth={stroke}
-          fill="none"
-          strokeDasharray={`${filled} ${circumference}`}
-          transform={`rotate(-90 ${size / 2} ${size / 2})`}
-        />
+        {filled > 0 ? (
+          <Circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke={green}
+            strokeWidth={stroke}
+            fill="none"
+            strokeDasharray={`${filled} ${circumference}`}
+            transform={`rotate(-90 ${size / 2} ${size / 2})`}
+          />
+        ) : null}
       </Svg>
       <View style={{ position: 'absolute', top: 0, left: 0, width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
         <Text style={{ fontSize: 20, fontFamily: 'Helvetica-Bold', color: teal }}>{percent}%</Text>
