@@ -1,6 +1,12 @@
 import { Circle, Document, Image, Line, Page, Polyline, StyleSheet, Svg, Text, View } from '@react-pdf/renderer';
 import { SEVERITY_LABEL } from '@/lib/constants';
-import { buildCycleNarrative, type CycleSummary, type FinalReportData, type FinalReportTexts } from '@/lib/finalReport';
+import {
+  buildCycleNarrative,
+  RESOLVED_STATUSES_LABEL,
+  type CycleSummary,
+  type FinalReportData,
+  type FinalReportTexts,
+} from '@/lib/finalReport';
 import { formatDate } from '@/lib/format';
 import type { Project, Severity } from '@/types';
 
@@ -213,6 +219,9 @@ export function FinalReportDocument({
           <View style={[styles.splitCol, { alignItems: 'center', justifyContent: 'center' }]}>
             <Donut percent={data.resolutionRate} />
             <Text style={[styles.muted, { marginTop: 6 }]}>Taxa de resolução geral</Text>
+            <Text style={[styles.legendText, { textAlign: 'center' }]}>
+              Resolvida = status {RESOLVED_STATUSES_LABEL}
+            </Text>
           </View>
           <View style={[styles.splitCol, { paddingLeft: 12 }]}>
             <Text style={styles.subheading}>Por tipo</Text>

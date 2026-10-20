@@ -1,7 +1,15 @@
 import { SEVERITY_ORDER } from '@/lib/constants';
-import { isIssueResolved } from '@/lib/issueResolution';
 import { buildReportStats, type ReportStats } from '@/lib/reportStats';
-import type { Issue, TestCycle } from '@/types';
+import type { Issue, IssueStatus, TestCycle } from '@/types';
+
+/** Status que contam como resolvido nas considerações finais. */
+const RESOLVED_STATUSES: IssueStatus[] = ['aprovado', 'corrigido'];
+
+export const RESOLVED_STATUSES_LABEL = 'Aprovado ou Corrigido';
+
+function isIssueResolved(status: IssueStatus): boolean {
+  return RESOLVED_STATUSES.includes(status);
+}
 
 export interface CycleSummary {
   cycle: TestCycle;

@@ -14,7 +14,12 @@ import { Textarea } from '@/components/ui/Textarea';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
 import { getErrorMessage } from '@/lib/errors';
-import { buildFinalReportData, buildFinalReportTexts, type FinalReportTexts } from '@/lib/finalReport';
+import {
+  buildFinalReportData,
+  buildFinalReportTexts,
+  RESOLVED_STATUSES_LABEL,
+  type FinalReportTexts,
+} from '@/lib/finalReport';
 import { buildReportFileName } from '@/lib/pdfFileName';
 import { listCycles } from '@/services/cycleService';
 import { listIssuesByCycle } from '@/services/issueService';
@@ -276,7 +281,10 @@ export function ProjectFinalReportPage() {
           <div className="mb-6 grid gap-4 md:grid-cols-4">
             <Stat label="Ciclos" value={String(cycles.length)} />
             <Stat label="Ocorrências" value={String(data.allIssues.length)} />
-            <Stat label="Resolvidas" value={`${data.resolved} (${data.resolutionRate}%)`} />
+            <Stat
+              label={`Resolvidas (${RESOLVED_STATUSES_LABEL})`}
+              value={`${data.resolved} (${data.resolutionRate}%)`}
+            />
             <Stat label="Pendentes" value={String(data.pending)} />
           </div>
 
