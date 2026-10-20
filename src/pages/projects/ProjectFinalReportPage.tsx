@@ -13,6 +13,7 @@ import { Spinner } from '@/components/ui/Spinner';
 import { Textarea } from '@/components/ui/Textarea';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/contexts/ToastContext';
+import { ISSUE_STATUS_LABEL, ISSUE_STATUSES } from '@/lib/constants';
 import { getErrorMessage } from '@/lib/errors';
 import {
   buildFinalReportData,
@@ -287,6 +288,14 @@ export function ProjectFinalReportPage() {
             />
             <Stat label="Pendentes" value={String(data.pending)} />
           </div>
+
+          <p className="mb-6 text-sm text-muted">
+            <span className="font-semibold text-ink">Por status:</span>{' '}
+            {ISSUE_STATUSES.filter((status) => data.stats.byStatus[status] > 0)
+              .map((status) => `${ISSUE_STATUS_LABEL[status]} ${data.stats.byStatus[status]}`)
+              .join(' · ') || '—'}
+            . Só contam como resolvidas as ocorrências com status {RESOLVED_STATUSES_LABEL}.
+          </p>
 
           <Card className="grid max-w-5xl gap-4">
             <label className="flex items-start gap-3 rounded-xl bg-paper px-3 py-3 text-sm">
