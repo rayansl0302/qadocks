@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { CycleIssueSummary } from '@/components/cycles/CycleIssueSummary';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -11,6 +12,7 @@ import { CYCLE_STATUS_LABEL, PROJECT_STATUS_LABEL } from '@/lib/constants';
 import { getErrorMessage } from '@/lib/errors';
 import { formatDate } from '@/lib/format';
 import { deleteCycleById, listCycles } from '@/services/cycleService';
+import { getCycleStatusCounts, type CycleStatusCounts } from '@/services/issueService';
 import { deleteProject, getProject } from '@/services/projectService';
 import type { Project, TestCycle } from '@/types';
 
@@ -20,6 +22,7 @@ export function ProjectDetailPage() {
   const { showToast } = useToast();
   const [project, setProject] = useState<Project | null>(null);
   const [cycles, setCycles] = useState<TestCycle[]>([]);
+  const [statusCounts, setStatusCounts] = useState<Record<string, CycleStatusCounts>>({});
   const [loading, setLoading] = useState(true);
   const [confirmProject, setConfirmProject] = useState(false);
   const [cycleToDelete, setCycleToDelete] = useState<string | null>(null);
@@ -40,7 +43,9 @@ export function ProjectDetailPage() {
           return;
         }
         setProject(current);
-        setCycles(await listCycles(id));
+        const [projectCycles, counts] = await Promise.all([listCycles(id), getCycleStatusCounts(id)]);
+        setCycles(projectCycles);
+        setStatusCounts(counts);
       } catch (error) {
         showToast(getErrorMessage(error), 'error');
       } finally {
@@ -140,6 +145,7 @@ export function ProjectDetailPage() {
                 <p className="mt-3 text-sm">
                   {CYCLE_STATUS_LABEL[cycle.status]} · {formatDate(cycle.startDate)} — {formatDate(cycle.endDate)}
                 </p>
+                <CycleIssueSummary counts={statusCounts[cycle.id]} />
               </Link>
               <div className="mt-4 flex gap-2">
                 <Link to={`/cycles/${cycle.id}/edit`}>

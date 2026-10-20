@@ -81,6 +81,24 @@ export async function listIssuesByUser(userId: string): Promise<Issue[]> {
   return snapshot.docs.map((item) => mapIssue(item.id, item.data() as Record<string, unknown>));
 }
 
+export type CycleStatusCounts = Partial<Record<IssueStatus, number>>;
+
+/** Quantidade de ocorrências por status de cada ciclo do projeto (uma única leitura). */
+export async function getCycleStatusCounts(projectId: string): Promise<Record<string, CycleStatusCounts>> {
+  const userId = getFirebaseAuth().currentUser?.uid;
+  if (!userId) {
+    return {};
+  }
+  const counts: Record<string, CycleStatusCounts> = {};
+  (await listIssuesByUser(userId))
+    .filter((issue) => issue.projectId === projectId)
+    .forEach((issue) => {
+      const cycleCounts = (counts[issue.cycleId] ??= {});
+      cycleCounts[issue.status] = (cycleCounts[issue.status] ?? 0) + 1;
+    });
+  return counts;
+}
+
 export async function getIssue(issueId: string): Promise<Issue | null> {
   const snapshot = await getDoc(doc(getFirebaseDb(), 'issues', issueId));
   if (!snapshot.exists()) {

@@ -31,8 +31,13 @@ export function SeverityBadge({ value }: { value: Severity }) {
   return <span className={cn('rounded-full px-2.5 py-1 text-xs font-semibold', severityClass[value])}>{SEVERITY_LABEL[value]}</span>;
 }
 
-export function StatusBadge({ value }: { value: IssueStatus }) {
-  return <span className={cn('rounded-full px-2.5 py-1 text-xs font-semibold', statusClass[value])}>{ISSUE_STATUS_LABEL[value]}</span>;
+export function StatusBadge({ value, count }: { value: IssueStatus; count?: number }) {
+  return (
+    <span className={cn('rounded-full px-2.5 py-1 text-xs font-semibold', statusClass[value])}>
+      {ISSUE_STATUS_LABEL[value]}
+      {count === undefined ? '' : ` · ${count}`}
+    </span>
+  );
 }
 
 export function TypeBadge({ value }: { value: IssueType }) {

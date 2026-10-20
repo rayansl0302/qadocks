@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { CycleIssueSummary } from '@/components/cycles/CycleIssueSummary';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -10,6 +11,7 @@ import { CYCLE_STATUS_LABEL } from '@/lib/constants';
 import { getErrorMessage } from '@/lib/errors';
 import { formatDate } from '@/lib/format';
 import { listCycles } from '@/services/cycleService';
+import { getCycleStatusCounts, type CycleStatusCounts } from '@/services/issueService';
 import { getProject } from '@/services/projectService';
 import type { Project, TestCycle } from '@/types';
 
@@ -19,6 +21,7 @@ export function ProjectCyclesPage() {
   const { showToast } = useToast();
   const [project, setProject] = useState<Project | null>(null);
   const [cycles, setCycles] = useState<TestCycle[]>([]);
+  const [statusCounts, setStatusCounts] = useState<Record<string, CycleStatusCounts>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,7 +40,9 @@ export function ProjectCyclesPage() {
           return;
         }
         setProject(current);
-        setCycles(await listCycles(id));
+        const [projectCycles, counts] = await Promise.all([listCycles(id), getCycleStatusCounts(id)]);
+        setCycles(projectCycles);
+        setStatusCounts(counts);
       } catch (error) {
         showToast(getErrorMessage(error), 'error');
       } finally {
@@ -87,6 +92,7 @@ export function ProjectCyclesPage() {
                     {CYCLE_STATUS_LABEL[cycle.status]} · {formatDate(cycle.startDate)} — {formatDate(cycle.endDate)}
                   </p>
                 </div>
+                <CycleIssueSummary counts={statusCounts[cycle.id]} />
               </Card>
             </Link>
           ))}
